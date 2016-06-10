@@ -1,0 +1,35 @@
+body { padding-top: 60px; }
+
+a.accordion-toggle {
+  display: block;
+  padding: 10px  15px;
+  text-decoration: none;  
+}
+
+div.panel-heading:hover{
+	background-color: #003380;
+}
+
+div.panel-body{	
+	background-color: #003366;
+}
+div.panel-group .well,.panel {
+	box-shadow: 0 0 30px rgba(0,0,0,0.8);
+	 text-shadow: 2px 2px  3px black;
+}
+
+.centering {
+  float:none;
+  margin:0 auto;
+  text-align:center;
+}
+
+.transparent-input{
+       background-color:rgba(0,0,0,0) !important;
+
+       color: white;
+    }
+
+    .no-click {
+    pointer-events: none;
+}
