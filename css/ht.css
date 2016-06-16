@@ -13,10 +13,13 @@ div.panel-heading:hover{
 div.panel-body{	
 	background-color: #003366;
 }
-div.panel-group .well,.panel {
+div#well_entry{
 	box-shadow: 0 0 30px rgba(0,0,0,0.8);
 	 text-shadow: 2px 2px  3px black;
+   background-color: #003366;
+   color: white;
 }
+
 
 .centering {
   float:none;
@@ -26,10 +29,17 @@ div.panel-group .well,.panel {
 
 .transparent-input{
        background-color:rgba(0,0,0,0) !important;
-
        color: white;
     }
 
     .no-click {
     pointer-events: none;
+}
+
+button[type="submit"]:hover, button[type="reset"]:hover{
+  color:white;
+
+}
+button[type="submit"],button[type="reset"]{
+border: 1px solid white;
 }

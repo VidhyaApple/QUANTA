@@ -10,7 +10,12 @@ session_start();
     
     <title>Hours Tracker</title>
      <!-- bootstrap min css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    
+     <link rel="stylesheet" href="clockpicker/jquery-clockpicker.min.css"> 
+
+
     <link rel="stylesheet" type="text/css" href="css/ht.css">
     
 </head>
@@ -27,9 +32,9 @@ session_start();
             </div>
             <div class="collapse navbar-collapse" id="navbar_collapse" >
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" id="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li><a href="#" id="activity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
-                    <li id="logout"><a href="#" id="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="activity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse" id="logout"><a href="#" id="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                 </ul>
             </div>
         </div>
@@ -47,23 +52,30 @@ session_start();
 
 <!-- jquery min js -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+
 <!-- bootstrap min js -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<!-- own js -->
-<script type="text/javascript" src="js/ht.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+<script src="clockpicker/jquery-clockpicker.min.js"></script>
+
 <?php
 if(isset($_SESSION["name"]) AND isset($_SESSION["email"])){?>
 <script>
 $(document).ready(function(){
-$(".content-area").load("html/entry.php");
+$(".content-area").load("entry.php");
 });
 </script>
 <?php }else{?>
 <script>
 $(document).ready(function(){
-$(".content-area").load("form.php");
+$(".content-area").load("form.html");
+ 
 });
 </script>
 <?php } ?>
+<!-- own js -->
+<script type="text/javascript" src="js/ht.js"></script>
 </body>
 </html>
