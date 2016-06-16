@@ -14,7 +14,7 @@ $(document).on("click", "#to_time_span", function () {
                
 
 function fade_alert(alert_val,filename){
-	$("<div class='alert alert-success col-md-6 col-lg-6 centering fade in'>"+alert_val+"</div>").prependTo(".content-area").delay(500).fadeOut("slow",function(){ 
+	$("<div class='alert alert-success col-md-6 col-lg-6 centering fade in'>"+alert_val+"</div>").prependTo(".content-area").delay(1000).fadeOut("slow",function(){ 
 		 $(".content-area").load(filename);});
 		 	   
 }
@@ -26,11 +26,24 @@ function fade_alert(alert_val,filename){
 		 		}else if(data==="no_sessions"){
 		 			logout_alert="You haven't logged in yet!";
 		 		}else{
-		 			logout_alert="Some eror in logging out!";
+		 			logout_alert="Some error in logging out!";
 		 		}
 		 		fade_alert(logout_alert,"form.html");
 		 	}
  	     });
+ 	});
+
+ $("#viewactivity_nav").on("click",function(){
+ 		
+ 		$.getJSON('calculate_records.php', function(data) { 
+           alert(data);
+           $obj=$.parseJSON(data);
+          $(".content-area").html($obj[date]);
+ 		}).done(function(){
+			alert("success");
+ 		}).fail(function(){
+ 			alert("error");
+ 		});
  	});
 
     //log in/sign up form
@@ -65,21 +78,26 @@ function fade_alert(alert_val,filename){
 	 }); 
 
 $(document).on('submit', '.form_entry', function(){
-		 
+	
+     if(($("input[name='pro_pages']").val()!=="") || ($("input[name='qc_pages']").val()!=="")){
+
 	 $.post('submit.php', $(this).serialize()).done(function(data){
     		
 	 	  if(data=="record_inserted"){	
-                alert("Record inserted successfully");
-	 	   }else{
-	 	   	alert(data);
-	 	   	alert("some error");
+                fade_alert("Saved successfully","entry.php");
+	 	   }else{	 	   	
+	 	   	alert("Error in submitting records!");
 	 	   }
 
 	 	}).fail(function(){
 		  alert('Failed to submit the data! Database issue');
 
 		  });
+
+	 }else{alert("Please enter number of pages!");}	
+
 	return false;
+   
 	 }); 
 
 

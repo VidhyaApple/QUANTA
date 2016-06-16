@@ -11,7 +11,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 class ht_crud
 {  
 	public $new_conn;
-	
+	public $result;
 	function __construct($table_user,$table_record)
 	{   
 		
@@ -22,13 +22,13 @@ class ht_crud
   			if(count($_POST)===2){
   				$login_email = $this->test_input($_POST["email_login"]);
   				$login_password = $this->test_input($_POST["pwd_login"]);
-  				$this->ht_read($table_user,$login_email,$login_password);
+  				$this->result=$this->ht_read($table_user,$login_email,$login_password);
 
   			}elseif(count($_POST)===3){
   				$name = $this->test_input($_POST["fullname"]);
 				$email = $this->test_input($_POST["email"]);
 	  			$password = $this->test_input($_POST["pwd"]);
-	  			$this->ht_insert($table_user,$name,$email,$password);
+	  			$this->result=$this->ht_insert($table_user,$name,$email,$password);
 
 	  		}elseif(count($_POST)>3){
   				$from_time = $this->test_input($_POST["from_time"]);
@@ -36,15 +36,22 @@ class ht_crud
 	  			$journal_id = $this->test_input($_POST["journal_id"]);
 				
 				$pro_pages = $this->test_input($_POST["pro_pages"]);
+				$pro_pages=$this->check_empty($pro_pages);
 
 				$qc_pages = $this->test_input($_POST["qc_pages"]);
+				$qc_pages=$this->check_empty($qc_pages);
 
-	  			$this->ht_insert_record($table_record,$from_time,$to_time,$journal_id,$pro_pages,$qc_pages);	
+	  			$this->result=$this->ht_insert_record($table_record,$from_time,$to_time,$journal_id,$pro_pages,$qc_pages);	
   		   
 			}else{
-				echo "No POST";
+				$this->result= "No POST";
 			}
+			$this->new_conn->conn->close();
+			
 		}
+	}
+	public function crud_result(){
+		return $this->result;
 	}
 
 	public function test_input($data) {
@@ -59,42 +66,35 @@ class ht_crud
 		     if($this->ht_check_email_date($table_user,$email,true)){
 		    
              $insert="INSERT INTO `$table_user` (`Name`,`Email`,`Password`) VALUES ('$name','$email','$pwd')";
-             if($this->new_conn->conn->query($insert)===true){
+             if($this->new_conn->conn->query($insert)){
              	$_SESSION["email"]=$email;
              	$_SESSION["name"]=$name;
              	$_SESSION["user_id"]=$this->new_conn->conn->insert_id;
-             	echo "inserted";
+             	return "inserted";
              }else {
-               echo "error";
+               return "error";
 	         }
-	         $this->new_conn->conn->close();
+	         
 	     }else{
-	     	echo "email_exists";
+	     	return "email_exists";
 	     }
 	}
 
 	public function ht_insert_record($table_record,$from_time,$to_time,$journal_id,$pro_pages,$qc_pages){
-		    $date=date('d-m-Y, l');
+
+		    $date=date('d-m-Y l');
             $time=$from_time." - ".$to_time;
-			$user_id=$_SESSION["user_id"];	     
+			$user_id=$_SESSION["user_id"];	
+
 		    if($this->ht_check_email_date($table_record,$date,false)){
 
-		             $insert="INSERT INTO `$table_record` (`date`,`user_id`,`journal_id`,`time`,`pro_pages`,`qc_pages`) VALUES ('$date','$user_id','$journal_id','$time','$pro_pages','$qc_pages')";
-		             if($this->new_conn->conn->query($insert)===true){		             	
-		             	echo "record_inserted";
-		             }else {
-		               echo "error";
-			         }
+		             $insert_str="INSERT INTO `$table_record` (`date`,`user_id`,`journal_id`,`time`,`pro_pages`,`qc_pages`) VALUES ('$date','$user_id','$journal_id','$time','$pro_pages','$qc_pages')";            	
+		             
 			}else{
-                 $update="UPDATE `$table_record` SET `journal_id`=CONCAT(`journal_id`,' ; $journal_id'),`time`=CONCAT(`time`,' ; $time'),`pro_pages`=CONCAT(`pro_pages`,' ; $pro_pages'),`qc_pages`=CONCAT(`qc_pages`,' ; $qc_pages');";
-                 if($this->new_conn->conn->query($update)===true){		             	
-		             	echo "record_inserted";
-		             }else {
-		               echo "error";
-			         }
-
-			}         
-	         $this->new_conn->conn->close();
+                 $insert_str="UPDATE `$table_record` SET `journal_id`=CONCAT(`journal_id`,' ; $journal_id'),`time`=CONCAT(`time`,' ; $time'),`pro_pages`=CONCAT(`pro_pages`,' ; $pro_pages'),`qc_pages`=CONCAT(`qc_pages`,' ; $qc_pages') where `user_id`=$user_id;";
+  			}         
+  			 return $this->new_conn->conn->query($insert_str) ? "record_inserted" : "error";
+	         
 	     
 	}
 
@@ -102,18 +102,15 @@ class ht_crud
 		   if($email_val){
 		    $check_read_sql="SELECT `Email` FROM `$table` where `Email`='$str'";
 		   }else{
-		   	$check_read_sql="SELECT `date` FROM `$table` where `date`='$str'";
+		   	$user_id=$_SESSION["user_id"];
+		   	$check_read_sql="SELECT `date` FROM `$table` where `date`='$str' AND `user_id`='$user_id'";
 		   }
 		    $check_read=$this->new_conn->conn->query($check_read_sql);   
-		    if ($check_read->num_rows > 0) {
-            return false;
-		    }else{
-            return true;
-		    }	
+		    return $check_read->num_rows > 0 ? false : true ;
     }		    
 
 	public function ht_read($table_user,$email,$pwd){
-		    $read_sql="SELECT `Name` FROM `$table_user` where `Email`='$email' AND `Password` ='$pwd' ";
+		    $read_sql="SELECT `Name`,`user_id` FROM `$table_user` where `Email`='$email' AND `Password` ='$pwd' ";
 		    $read=$this->new_conn->conn->query($read_sql);   
 		    if ($read->num_rows > 0) {
 		    	$row = $read->fetch_assoc();
@@ -121,14 +118,18 @@ class ht_crud
              	$_SESSION["name"]=$row["Name"];
              	$_SESSION["user_id"]=$row["user_id"];
 
-	         echo "loggedin";
+	         return "loggedin";
 			}else{
-				echo "loggedin_dont_match";
+				return "loggedin_dont_match";
 			}
-			$this->new_conn->conn->close();
+			
+	}
 
+	public function check_empty($str){
+		return $str==="" ? "-" : $str;
+		
 	}
 }
 $crud=new ht_crud("ht_users","ht_record");
-
+echo $crud->crud_result();
 ?>

@@ -20,7 +20,7 @@ session_start();
   </div>
 <br>
   
-      <div class="text-center"><h4><?php echo date('d-m-Y, l') ;?></h4></div>
+      <div class="text-center"><h4><?php echo date('d-m-Y l') ;?></h4></div>
     <form class="form-horizontal form_entry" role="form" >
      <div class="row">                 
               <div class='col-xs-6'>

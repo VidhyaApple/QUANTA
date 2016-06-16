@@ -33,7 +33,7 @@ session_start();
             <div class="collapse navbar-collapse" id="navbar_collapse" >
                 <ul class="nav navbar-nav navbar-right">
                     <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="activity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
                     <li data-toggle="collapse" data-target="#navbar_collapse" id="logout"><a href="#" id="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                 </ul>
             </div>
