@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(E_ALL & ~E_NOTICE);
 ?>
 
 <div class="well centering" id="well_entry">
@@ -12,11 +13,7 @@ session_start();
 
    <div class="row">        
        
-             <button class="col-xs-6 btn btn-primary btn-lg no-click transparent-input" id="today_record_pages">TODAY: 3 Pages<br><span class="badge"  id="today_record_hrs">6 hrs</span></button>        
-          
-              <button class="col-xs-6 btn btn-primary btn-lg no-click transparent-input"  id="total_record_pages">TOTAL: 3 Pages<br><span class="badge"  id="total_record_hrs">6 hrs</span></button>
-                
-     
+             <button class="col-md-12 btn btn-primary btn-lg no-click transparent-input" id="today_record"></button>
   </div>
 <br>
   

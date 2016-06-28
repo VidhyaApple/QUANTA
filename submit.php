@@ -91,7 +91,7 @@ class ht_crud
 		             $insert_str="INSERT INTO `$table_record` (`date`,`user_id`,`journal_id`,`time`,`pro_pages`,`qc_pages`) VALUES ('$date','$user_id','$journal_id','$time','$pro_pages','$qc_pages')";            	
 		             
 			}else{
-                 $insert_str="UPDATE `$table_record` SET `journal_id`=CONCAT(`journal_id`,' ; $journal_id'),`time`=CONCAT(`time`,' ; $time'),`pro_pages`=CONCAT(`pro_pages`,' ; $pro_pages'),`qc_pages`=CONCAT(`qc_pages`,' ; $qc_pages') where `user_id`=$user_id;";
+                 $insert_str="UPDATE `$table_record` SET `journal_id`=CONCAT(`journal_id`,' ; $journal_id'),`time`=CONCAT(`time`,' ; $time'),`pro_pages`=CONCAT(`pro_pages`,' ; $pro_pages'),`qc_pages`=CONCAT(`qc_pages`,' ; $qc_pages') where `user_id`=$user_id AND `date`='$date'";
   			}         
   			 return $this->new_conn->conn->query($insert_str) ? "record_inserted" : "error";
 	         

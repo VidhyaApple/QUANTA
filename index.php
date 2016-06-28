@@ -11,10 +11,10 @@ session_start();
     <title>Hours Tracker</title>
      <!-- bootstrap min css -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
     
      <link rel="stylesheet" href="clockpicker/jquery-clockpicker.min.css"> 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
 
     <link rel="stylesheet" type="text/css" href="css/ht.css">
     
@@ -29,12 +29,19 @@ session_start();
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
+            </div>            
+            <div>
+                <ul class="nav navbar-nav navbar-right visible-md visible-lg">
+                    <li><a href="#" class="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="#" class="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
+                    <li><a href="#" class="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                </ul>
             </div>
             <div class="collapse navbar-collapse" id="navbar_collapse" >
-                <ul class="nav navbar-nav navbar-right">
-                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" id="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
-                    <li data-toggle="collapse" data-target="#navbar_collapse" id="logout"><a href="#" id="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                <ul class="nav navbar-nav navbar-right visible-xs visible-sm">
+                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                 </ul>
             </div>
         </div>
@@ -53,28 +60,15 @@ session_start();
 <!-- jquery min js -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script> -->
 
 <!-- bootstrap min js -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-
 <script src="clockpicker/jquery-clockpicker.min.js"></script>
 
-<?php
-if(isset($_SESSION["name"]) AND isset($_SESSION["email"])){?>
-<script>
-$(document).ready(function(){
-$(".content-area").load("entry.php");
-});
-</script>
-<?php }else{?>
-<script>
-$(document).ready(function(){
-$(".content-area").load("form.html");
- 
-});
-</script>
-<?php } ?>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+
 <!-- own js -->
 <script type="text/javascript" src="js/ht.js"></script>
 </body>
