@@ -3,7 +3,7 @@ session_start();
 error_reporting(E_ALL & ~E_NOTICE);
 ?>
 
-<div class="well centering" id="well_entry">
+<div class="well centering col-md-8" id="well_entry" >
 
   <div class="row">
     <div class="col-xs-12">
@@ -11,39 +11,36 @@ error_reporting(E_ALL & ~E_NOTICE);
      </div>
    </div>
 
-   <div class="row">        
-       
-             <button class="col-md-12 btn btn-primary btn-lg no-click transparent-input" id="today_record"></button>
+   <div class="row">         
+             <button class="col-md-4 centering btn btn-primary btn-lg no-click" id="today_record"></button>
   </div>
 <br>
   
-      <div class="text-center"><h4><?php echo date('d-m-Y l') ;?></h4></div>
-    <form class="form-horizontal form_entry" role="form" >
-     <div class="row">                 
-              <div class='col-xs-6'>
+<div class="text-center"><h4><?php echo date('d-m-Y l') ;?></h4></div>
+<form class="form-horizontal form_entry" role="form" >
+  <div class="row">                 
+              <div class='col-xs-12'>
                   <div class="form-group">
-                      <div class="input-group clockpicker" data-placement="bottom" data-align="left" data-autoclose="true" id="from_time">
-
-                          <input type='text' id="from_time_input" class="form-control input-lg transparent-input" name="from_time" placeholder="FROM TIME" readonly="true" required> 
-                          <span class="input-group-addon" id="from_time_span">
-                              <span class="glyphicon glyphicon-time"></span>
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
                           </span>
+                          <input type='text' id="timepicker1" class="form-control input-lg transparent-input readonly" max="12:00 PM" name="from_time" placeholder="FROM TIME" required>
                       </div>
                   </div>
             </div>
                      
-             <div class='col-xs-6'>         
+             <div class='col-xs-12'>         
                 <div class="form-group">            
-                     <div class="input-group clockpicker" data-placement="bottom" data-align="left" data-autoclose="true" id="to_time">
-
-                          <input type='text' id="to_time_input" class="form-control input-lg transparent-input" name="to_time" placeholder="TO TIME" readonly="true" required> 
-                          <span class="input-group-addon" id="to_time_span">
-                              <span class="glyphicon glyphicon-time"></span>
+                     <div class="input-group">
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
                           </span>
-                      </div>      
+                          <input type='text' id="timepicker2" class="form-control input-lg transparent-input readonly" name="to_time" placeholder="TO TIME" required>
+                      </div>
                 </div>
             </div>
-</div>
+  </div>
 
 <div class="row">
                         
@@ -60,13 +57,13 @@ error_reporting(E_ALL & ~E_NOTICE);
                       
                   <div class="col-xs-6">
                       <div class="form-group">     
-                        <input type="text" class="form-control input-lg transparent-input" name="pro_pages" placeholder="PRODUCTION">                    
+                        <input type="number" class="form-control input-lg transparent-input" name="pro_pages" placeholder="PRODUCTION">                    
                   </div>
                </div>   
 
                <div class="col-xs-6">
                       <div class="form-group">     
-                        <input type="text" class="form-control input-lg transparent-input" name="qc_pages" placeholder="QC">                    
+                        <input type="number" class="form-control input-lg transparent-input" name="qc_pages" placeholder="QC">                    
                   </div>
                </div>  
      </div>           
@@ -87,5 +84,6 @@ error_reporting(E_ALL & ~E_NOTICE);
                     </div>                               
             </div>  
   </form> 
+
 
 </div>

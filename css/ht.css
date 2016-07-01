@@ -1,5 +1,3 @@
-body { padding-top: 60px; }
-
 a.accordion-toggle {
   display: block;
   padding: 10px  15px;
@@ -14,10 +12,11 @@ div.panel-body{
 	background-color: #003366;
 }
 div#well_entry{
-	box-shadow: 0 0 30px rgba(0,0,0,0.8);
+	box-shadow: 0 0 50px rgba(0,0,0,0.8);
 	 text-shadow: 2px 2px  3px black;
    background-color: #003366;
    color: white;
+
 }
 
 
@@ -30,6 +29,7 @@ div#well_entry{
 .transparent-input{
        background-color:rgba(0,0,0,0) !important;
        color: white;
+       box-shadow: 0 0 15px rgba(0,0,0,0.7);
     }
 
     .no-click {
@@ -85,12 +85,7 @@ border: 1px solid white;
    
 
 .customtable tbody tr:hover{
-  -moz-transform:scale3d(1.0,1.0,1.0);
-  -webkit-transform:scale3d(1.0,1.0,1.0);
-  -o-transform:scale3d(1.0,1.0,1.0);
-  transform:scale3d(1.0,1.0,1.0);
-
-  background-color:#003380 !important;;
+   background-color:#003380 !important;;
   }
 
   .label-as-badge {
@@ -110,3 +105,41 @@ border: 1px solid white;
     z-index:9999; 
     font-size: 1.2em;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+ 
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+ 
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background: #003380; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+html, body {
+  height: 100%;
+}
+body {
+  padding-top: 52px;  
+}
+
+.container.scrollable {
+  height: 100%;
+  overflow: auto;
+  /*background: #ccc;*/
+}
+
+@media screen and (max-width: 600px) {
+  body {
+     padding-bottom: 50px;  
+  }
+}
+

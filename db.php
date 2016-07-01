@@ -3,11 +3,9 @@ define('DB_SERVER','localhost');
 define('DB_USER','root');
 define('DB_PASSWORD','');
 define('DB_NAME','mysql');
-
 /**
 * database connection
 */
-
 class Db_con
 {
  public $conn;
@@ -19,9 +17,6 @@ class Db_con
 		    die("Connection failed: " . $this->conn->connect_error);
 		} 
 		
-
  }
-
 }
-
 ?>

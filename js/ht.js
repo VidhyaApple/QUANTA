@@ -1,6 +1,117 @@
 $(document).ready(function(){
 
 var session_data;
+
+// //ACITIVTIY TABLE
+var activity_table_temp;
+var tableData;
+var month_total_pages;
+var month_total_hrs;
+var month="";
+var year="";
+var toSearch="";
+var currentTime = new Date();
+var currentYear=currentTime.getFullYear();
+var currentDate=currentTime.getDate();
+var currentMonth=getCurrentMonth();
+var todayDate=currentMonth+"-"+currentDate+"-"+currentYear;
+var monthNames = {"JAN": "01","FEB": "02","MAR": "03","APR": "04","MAY": "05","JUN": "06","JUL": "07","AUG": "08","SEP": "09","OCT": "10","NOV": "11","DEC": "12"};
+
+//CURRENT TIME
+function getTime( ) {
+   
+  var h = (currentTime.getHours() % 12) || 12; // show midnight & noon as 12
+  return (
+    ( h < 10 ? '0' : '') + h +
+    ( currentTime.getMinutes() < 10 ? ':0' : ':') + currentTime.getMinutes() +
+                // optional seconds display
+    // (currentTime.getSeconds() < 10 ? ':0' : ':') + currentTime.getSeconds() + 
+    ( currentTime.getHours() < 12 ? ' AM' : ' PM' )
+  );
+  
+}
+function getCurrentMonth(){  
+  var mon = currentTime.getMonth() + 1;   
+  return (mon!==11 && mon !==12 && mon !==10) ?  ""+0+mon : mon ;
+}
+
+//TIMEPICKER
+//
+$(document).on("keydown",".readonly",function(e){
+        e.preventDefault();
+});
+
+var isHidden1 = true;
+var isHidden2 = true;
+var confirm_empty_timepicker1=false;
+var confirm_empty_timepicker2=false;
+var pickerTime1;
+var pickerTime2;
+$(document).on("click","#timepicker1",function(){
+  $(this).timepicker({      
+      minuteStep:1,
+      disableFocus :true
+  }).on('changeTime.timepicker', function(e) { 
+        var h= e.time.hours;
+        var m= e.time.minutes;
+        var mer= e.time.meridian;
+        pickerTime1=h+":"+m+" "+mer;
+       // confirm_empty_timepicker1=compareTime(pickerTime1);
+     });  
+    
+                
+  if(!isHidden1) {
+     $(this).timepicker('hideWidget'); 
+    isHidden1=true;
+  } else {
+    $(this).timepicker('showWidget');
+    isHidden1 = false;
+  }
+ 
+});
+
+function  compareTime(time1){
+        var compare1=new Date(todayDate+" "+time1);
+        var compare2=new Date(todayDate+" "+getTime());
+        return compare1 > compare2 ? true :false;         
+}
+$(document).on("click","#timepicker2",function(){
+  $(this).timepicker({
+      
+      minuteStep:1,
+      disableFocus :true
+  }).on('changeTime.timepicker', function(e) { 
+        var h= e.time.hours;
+        var m= e.time.minutes;
+        var mer= e.time.meridian;
+        pickerTime2=h+":"+m+" "+mer;
+        
+        
+     });     
+   
+  if(!isHidden2) {
+     $(this).timepicker('hideWidget'); 
+    isHidden2=true;
+  } else {
+    $(this).timepicker('showWidget');
+    isHidden2 = false;
+  }
+ 
+});
+
+$(document).on("keydown","input[name='journal_id']",function(){
+  if(compareTime($("#timepicker1".val()))){
+         $("#timepicker1").val("");
+         fade_alert("Selected From time is beyond current time!");         
+       } 
+       if(compareTime($("#timepicker2".val()))){
+         $("#timepicker2").val("");
+         fade_alert("Selected To time is beyond current time!");         
+       } 
+
+});
+//TIME PICKER ENDS
+  
 function checkSession(){
 	$.ajax({url:"session_check.php",success:function(data){
 		session_data=data;
@@ -13,7 +124,11 @@ function loadFile(file){
 	$.get(file, function(contentdata){			
 		$(".content-area").empty().html(contentdata);
 	});
-	if(file==="entry.php")showTodayData();
+	if(file==="entry.php"){
+		showTodayData();}
+	month="";
+    year="";
+    toSearch="";
 }
 
 if(checkSession()==="set"){
@@ -21,19 +136,7 @@ if(checkSession()==="set"){
 }else{
 	loadFile("form.html");
 }
-
-$(document).on("click", "#from_time_span", function () {
-    		$("#from_time").clockpicker({
-    			twelvehour:true
-    		});
-});
-
-$(document).on("click", "#to_time_span", function () {
-    		$("#to_time").clockpicker({
-    			twelvehour:true
-    		});
-});
-               
+             
 
 function fade_alert_loadfile(alert_val,filename){
 	$("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow",function(){ 
@@ -48,6 +151,7 @@ function fade_alert(alert_val){
 $(".home_nav").on("click",function(){
          if(checkSession()==="set"){
 			loadFile("entry.php");
+			
 		}else{
 			loadFile("form.html");
 		}
@@ -67,26 +171,6 @@ $(".home_nav").on("click",function(){
 		 	}
  	     });
  	});
-
- // //ACITIVTIY TABLE
-var activity_table_temp;
-var tableData;
-var month_total_pages;
-var month_total_hrs;
-var month="";
-var year="";
-var toSearch="";
-var currentTime = new Date();
-var currentYear=currentTime.getFullYear();
-var currentDate=currentTime.getDate();
-var currentMonth=getCurrentMonth();
-var monthNames = {"JAN": "01","FEB": "02","MAR": "03","APR": "04","MAY": "05","JUN": "06","JUL": "07","AUG": "08","SEP": "09","OCT": "10","NOV": "11","DEC": "12"};
-
-function getCurrentMonth(){  
-  var mon = currentTime.getMonth() + 1;   
-  return (mon!==11 && mon !==12 && mon !==10) ?  ""+0+mon : mon ;
-}
-
 
 var activity_columns=[
   {
@@ -157,6 +241,10 @@ var details_columns = [
 // FILTER TABLE BUTTONS
 // 
 //month filter 
+//
+$(document).on("click","#month_filter_li li a",function(){
+  $("#month_filter_li").css("z-index","9999");
+});
 $(document).on("click","#month_filter_li li a",function(){
         $('#month_name').html($(this).text()+ " <span class='caret'></span>");
         month= monthNames[$(this).text()];       
@@ -202,6 +290,7 @@ function filterTable(){
        }       
        $(".month_total_time").html("<b>TOTAL HOURS: </b>"+month_total_hrs);
        $(".month_total_pages").html("<b>TOTAL PAGES: </b>"+month_total_pages);
+       
   } 
 
 function sumUpMonthTime(times){
@@ -252,9 +341,10 @@ function showTodayData(){
 	$.getJSON('ajax_response.php',{todaydata:"not_user"}).done(function(data){
 					var data_pages= data[0]===null ? 0 : data[0];
 					var data_hrs=data[1]===null ? "0 hrs" : data[1];
+
 		 		   $("#today_record").html("TODAY: "+data_pages+" PAGES   	<span class='badge label-as-badge'>"+data_hrs+"</span>");
 		 		   
-			    }).fail(function(data){	
+			    }).fail(function(){	
 			    	
 			      fade_alert("ERROR IN LOADING TODAY'S ACTIVITY");
 			    });
@@ -340,8 +430,11 @@ function showTodayData(){
 	return false;
 	 }); 
 
+   
+
 $(document).on('submit', '.form_entry', function(){
-	
+
+      	
      if(($("input[name='pro_pages']").val()!=="") || ($("input[name='qc_pages']").val()!=="")){
 
 	 $.post('submit.php', $(this).serialize()).done(function(data){

@@ -25,8 +25,16 @@ class Record_Read
  		$this->who=$who;
  		$todayDate=date("d-m-Y l");
 	    $query= $this->who ==="user" ? "SELECT * FROM `$this->table` where `user_id`='$this->user_id' " : "SELECT * FROM `$this->table` where `date`= '$todayDate' and `user_id`='$this->user_id'";		
-		 $read=$this->new_conn->conn->query($query);		 
-		 $raw_output=$read->num_rows > 0 ? $read->fetch_all(MYSQLI_ASSOC) : NULL ;		 
+		 $read=$this->new_conn->conn->query($query);
+		 
+		 if($read->num_rows > 0){
+		     	$raw_output = [];
+		        while ($row = $read->fetch_assoc()) {
+    			$raw_output[] = $row;}
+		
+		 }else{
+		 $raw_output=NULL;
+		 }
 		 return $this->processData($raw_output);
 		}
 	
