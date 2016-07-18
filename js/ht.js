@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+function showPaddingBottomMobileView(){
+    if($('nav.navbar-fixed-bottom').is(':visible')){
+           $("body").css("padding-bottom","50px"); 
+         }else{$("body").css("padding-bottom","0px"); }
+} 
+showPaddingBottomMobileView();
 var session_data;
 
 // //ACITIVTIY TABLE
@@ -35,6 +41,24 @@ function getCurrentMonth(){
   return (mon!==11 && mon !==12 && mon !==10) ?  ""+0+mon : mon ;
 }
 
+
+//hide footer when input box is on focus
+$(document).on('focus', 'input', function() {
+//alert("hide");
+    $("nav.navbar-fixed-bottom").removeClass("visible-xs").addClass("hidden-xs hidden-md hidden-lg");
+    showPaddingBottomMobileView();
+    
+});
+
+//show footer when input is NOT on focus
+$(document).on('blur', 'input', function() {     
+    $("nav.navbar-fixed-bottom").removeClass("hidden-xs hidden-md hidden-lg").addClass("visible-xs");
+    showPaddingBottomMobileView();   
+ 
+});
+
+
+
 //TIMEPICKER
 //
 $(document).on("keydown",".readonly",function(e){
@@ -56,7 +80,9 @@ $(document).on("click","#timepicker1",function(){
         var m= e.time.minutes;
         var mer= e.time.meridian;
         pickerTime1=h+":"+m+" "+mer;
-       // confirm_empty_timepicker1=compareTime(pickerTime1);
+        var compare1=new Date(todayDate+" "+pickerTime1);
+        var compare2=new Date(todayDate+" "+getTime());
+        confirm_empty_timepicker1  = compare1 > compare2 ? true :false;         
      });  
     
                 
@@ -67,14 +93,9 @@ $(document).on("click","#timepicker1",function(){
     $(this).timepicker('showWidget');
     isHidden1 = false;
   }
- 
 });
 
-function  compareTime(time1){
-        var compare1=new Date(todayDate+" "+time1);
-        var compare2=new Date(todayDate+" "+getTime());
-        return compare1 > compare2 ? true :false;         
-}
+
 $(document).on("click","#timepicker2",function(){
   $(this).timepicker({
       
@@ -85,10 +106,12 @@ $(document).on("click","#timepicker2",function(){
         var m= e.time.minutes;
         var mer= e.time.meridian;
         pickerTime2=h+":"+m+" "+mer;
-        
+        var compare1=new Date(todayDate+" "+pickerTime2);
+        var compare2=new Date(todayDate+" "+getTime());
+        confirm_empty_timepicker2  = compare1 > compare2 ? true :false;
         
      });     
-   
+    
   if(!isHidden2) {
      $(this).timepicker('hideWidget'); 
     isHidden2=true;
@@ -96,81 +119,104 @@ $(document).on("click","#timepicker2",function(){
     $(this).timepicker('showWidget');
     isHidden2 = false;
   }
- 
 });
 
 $(document).on("keydown","input[name='journal_id']",function(){
-  if(compareTime($("#timepicker1".val()))){
+  if(confirm_empty_timepicker1===true){
          $("#timepicker1").val("");
+         confirm_empty_timepicker1=false;
          fade_alert("Selected From time is beyond current time!");         
        } 
-       if(compareTime($("#timepicker2".val()))){
+       if(confirm_empty_timepicker2===true){
          $("#timepicker2").val("");
+         confirm_empty_timepicker2=false;
          fade_alert("Selected To time is beyond current time!");         
        } 
 
 });
 //TIME PICKER ENDS
   
-function checkSession(){
-	$.ajax({url:"session_check.php",success:function(data){
-		session_data=data;
-				
-	},async: false});
-    return session_data;
+function checkSession(handleData){  
+      $.ajax({url:"session_check.php",success:function(data){
+        handleData(data);
+      }
+    }); 
+
  }
 
+// function loadFile(file){
+//   $('#img-load').show();
+//   $(".content-area").hide();
+//   $.get(file, function(contentdata){ 
+
+//     $(".content-area").delay(5000).empty().html(contentdata).promise().done(function(){
+//       $('#img-load').hide();
+//       $(".content-area").show();
+//     });
+//   });
+//   if(file==="entry.php"){
+//     showTodayData();}
+//   month="";
+//     year="";
+//     toSearch="";
+// }
 function loadFile(file){
-	$.get(file, function(contentdata){			
-		$(".content-area").empty().html(contentdata);
-	});
-	if(file==="entry.php"){
-		showTodayData();}
-	month="";
+  //$('#img-load').show();
+  //$(".content-area").hide();
+  $.get(file, function(contentdata){ 
+
+    $(".content-area").empty().html(contentdata);
+  });
+  if(file==="entry.php"){
+    showTodayData();}
+  month="";
     year="";
     toSearch="";
 }
 
-if(checkSession()==="set"){
-	loadFile("entry.php");
-}else{
-	loadFile("form.html");
-}
+checkSession(function(output){  
+  if(output==="set"){
+    loadFile("entry.php");
+  }else{
+    loadFile("form.html");
+  }
+});  
              
 
 function fade_alert_loadfile(alert_val,filename){
-	$("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow",function(){ 
-		 loadFile(filename);});
-		 	   
+  $("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow",function(){ 
+     loadFile(filename);});
+         
 }
 
 function fade_alert(alert_val){
-	$("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow");
-		 	   
+  $("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow");
+         
 }
 $(".home_nav").on("click",function(){
-         if(checkSession()==="set"){
-			loadFile("entry.php");
-			
-		}else{
-			loadFile("form.html");
-		}
-});	
+         checkSession(function(output){  
+            if(output==="set"){
+                loadFile("entry.php");     
+             }else{
+                loadFile("form.html");
+              }
+     });         
+}); 
 
  $(".logout_nav").on("click",function(){
- 		var logout_alert="";
- 		$.ajax({url: 'logout.php', success: function(data){
-		 		if(data==="logged_out"){
-		 			logout_alert="Logged out successfully!";
-		 		}else if(data==="no_sessions"){
-		 			logout_alert="You haven't logged in yet!";
-		 		}else{
-		 			logout_alert="Some error in logging out!";
-		 		}
-		 		fade_alert_loadfile(logout_alert,"form.html");
-		 	}
- 	     });
- 	});
+    var logout_alert="";
+    $.ajax({url: 'logout.php', success: function(data){
+        if(data==="logged_out"){
+          logout_alert="Logged out successfully!";
+        }else if(data==="no_sessions"){
+          logout_alert="You haven't logged in yet!";
+        }else{
+          logout_alert="Some error in logging out!";
+        }
+        fade_alert_loadfile(logout_alert,"form.html");
+      }
+       });
+  });
 
 var activity_columns=[
   {
@@ -286,7 +332,7 @@ function filterTable(){
        
        month_total_hrs=sumUpMonthTime(month_total_hrs_array);
        for(var key in monthNames){
-       	  if(monthNames[key]===month) $(".month_year").html("<b>"+key+"  -  "+year+"</b>");
+          if(monthNames[key]===month) $(".month_year").html("<b>"+key+"  -  "+year+"</b>");
        }       
        $(".month_total_time").html("<b>TOTAL HOURS: </b>"+month_total_hrs);
        $(".month_total_pages").html("<b>TOTAL PAGES: </b>"+month_total_pages);
@@ -294,60 +340,61 @@ function filterTable(){
   } 
 
 function sumUpMonthTime(times){
-	
-	var minutes=0;
-	for (var i = 0; i < times.length; i++) {
-		var time=times[i].replace(" hrs","");		
-		var splitted=time.split(":");
-		minutes =minutes + Number(splitted[0] * 60) + Number(splitted[1]);		
-	}  
-	
-	var hours = Math.floor(minutes/60);
-	minutes -= hours * 60; 
-	hours=hours.toString().length >=2 ? hours : "0"+hours;
-	minutes=minutes.toString().length===2 ? minutes : "0"+minutes;
-	return hours+":"+minutes+" hrs";
+  
+  var minutes=0;
+  for (var i = 0; i < times.length; i++) {
+    var time=times[i].replace(" hrs","");   
+    var splitted=time.split(":");
+    minutes =minutes + Number(splitted[0] * 60) + Number(splitted[1]);    
+  }  
+  
+  var hours = Math.floor(minutes/60);
+  minutes -= hours * 60; 
+  hours=hours.toString().length >=2 ? hours : "0"+hours;
+  minutes=minutes.toString().length===2 ? minutes : "0"+minutes;
+  return hours+":"+minutes+" hrs";
 }
  
 $(".viewactivity_nav").on("click",function(){
-	if(checkSession()!=="set"){
-		fade_alert("PLEASE LOG IN TO VIEW ACTIVITY!");}else{
- 	
-		 		$.getJSON('ajax_response.php',{fulldata:"user"}).done(function(data){
-		 		   
-		 			$.get("view_activity.php", function(contentdata){			
-						$(".content-area").empty().html(contentdata);
-						tableData=data;
-		                fillDropdown();    
-						$("#activity_table").bootstrapTable({
-		              			columns:activity_columns 
-		              	 });
-		          		filterTable();
-		          		$('#details_table').bootstrapTable({
-		              			columns:details_columns                
-		         		 });    
-		          		 
-					});           
-		      
-			    }).fail(function(){
-			    	
-			      fade_alert("ERROR IN LOADING ACTIVITY");
-			    });
-		}	    
-		 
+  checkSession(function(output){  
+        if(output!=="set"){
+          fade_alert("PLEASE LOG IN TO VIEW ACTIVITY!");}
+        else{        
+              $.getJSON('ajax_response.php',{fulldata:"user"}).done(function(data){
+                 
+                $.get("view_activity.php", function(contentdata){     
+                  $(".content-area").empty().html(contentdata);
+                  tableData=data;
+                          fillDropdown();    
+                  $("#activity_table").bootstrapTable({
+                              columns:activity_columns 
+                           });
+                        filterTable();
+                        $('#details_table').bootstrapTable({
+                              columns:details_columns                
+                       });    
+                         
+                });           
+                
+                }).fail(function(){
+                  
+                  fade_alert("ERROR IN LOADING ACTIVITY");
+                });
+          }     
+     });
   });
 
 function showTodayData(){
-	$.getJSON('ajax_response.php',{todaydata:"not_user"}).done(function(data){
-					var data_pages= data[0]===null ? 0 : data[0];
-					var data_hrs=data[1]===null ? "0 hrs" : data[1];
+  $.getJSON('ajax_response.php',{todaydata:"not_user"}).done(function(data){
+          var data_pages= data[0]===null ? 0 : data[0];
+          var data_hrs=data[1]===null ? "0 hrs" : data[1];
 
-		 		   $("#today_record").html("TODAY: "+data_pages+" PAGES   	<span class='badge label-as-badge'>"+data_hrs+"</span>");
-		 		   
-			    }).fail(function(){	
-			    	
-			      fade_alert("ERROR IN LOADING TODAY'S ACTIVITY");
-			    });
+           $("#today_record").html("TODAY: "+data_pages+" PAGES     <span class='badge label-as-badge'>"+data_hrs+"</span>");
+           
+          }).fail(function(){ 
+            
+            fade_alert("ERROR IN LOADING TODAY'S ACTIVITY");
+          });
 }
 
 
@@ -402,59 +449,61 @@ function showTodayData(){
 
     //log in/sign up form
     $(document).on('submit', '.form_login_signup', function(){
-		 
-	 $.post('submit.php', $(this).serialize()).done(function(data){
-    		
-	 	  if(data=="inserted"){	
-		 	  $(".panel-group").fadeOut('slow', function(){	  
-			 	fade_alert_loadfile('Signed up Successfully!',"entry.php");});		    
+     if(!($("#em_pwd_error").hasClass("hide"))){
+        $("#em_pwd_error").addClass("hide");
+     }
+   $.post('submit.php', $(this).serialize()).done(function(data){
+        
+      if(data=="inserted"){ 
+        $(".panel-group").fadeOut('slow', function(){   
+        fade_alert_loadfile('Signed up Successfully!',"entry.php");});        
 
-		}else if(data=="email_exists"){
+    }else if(data=="email_exists"){
             $("#em_error").removeClass("hide");
 
-		 }else if(data=="loggedin"){
-		 	$(".panel-group").fadeOut('slow', function(){
-		 	   fade_alert_loadfile("Logged in successfully","entry.php");
-		 	});  	
-		 	 
-		 }else if(data=="loggedin_dont_match"){
+     }else if(data=="loggedin"){
+      $(".panel-group").fadeOut('slow', function(){
+         fade_alert_loadfile("Logged in successfully","entry.php");
+      });   
+       
+     }else if(data=="loggedin_dont_match"){
               $("#em_pwd_error").removeClass("hide");
 
-		 }else{
-		 	 fade_alert("FAILED TO SUBMIT DATA!");
-		 }
-	  }).fail(function(){
-		  fade_alert('FAILED TO SUBMIT THE DATA. DATABASE ISSUE!');
+     }else{
+       fade_alert("FAILED TO SUBMIT DATA!");
+     }
+    }).fail(function(){
+      fade_alert('FAILED TO SUBMIT THE DATA. DATABASE ISSUE!');
 
-		  });
-	return false;
-	 }); 
+      });
+  return false;
+   }); 
 
    
 
 $(document).on('submit', '.form_entry', function(){
 
-      	
+        
      if(($("input[name='pro_pages']").val()!=="") || ($("input[name='qc_pages']").val()!=="")){
 
-	 $.post('submit.php', $(this).serialize()).done(function(data){
-    		
-	 	  if(data=="record_inserted"){	
+   $.post('submit.php', $(this).serialize()).done(function(data){
+        
+      if(data=="record_inserted"){  
                 fade_alert_loadfile("Saved successfully","entry.php");
-	 	   }else{	 	   	
-	 	   	fade_alert("ERROR IN SUBMITTING RECORDS!");
-	 	   }
+       }else{       
+        fade_alert("ERROR IN SUBMITTING RECORDS!");
+       }
 
-	 	}).fail(function(){
-		  fade_alert('FAILED TO SUBMIT THE DATA. DATABASE ISSUE!');
+    }).fail(function(){
+      fade_alert('FAILED TO SUBMIT THE DATA. DATABASE ISSUE!');
 
-		  });
+      });
 
-	 }else{fade_alert("PLEASE ENTER NO. OF PAGES!");}	
+   }else{fade_alert("PLEASE ENTER NO. OF PAGES!");} 
 
-	return false;
+  return false;
    
-	 }); 
+   }); 
 
 
 
@@ -477,17 +526,17 @@ $(document).on('keydown',$input, function () {
 //user is "finished typing," do something
 function doneTyping () {
   if($("#pwd2").val()!==""){  
-	  if($("#pwd").val()===$("#pwd2").val()){
-	        feedback_success("#confirm_password");
-	         $("button#form_submit").removeAttr("disabled");
-	         $("button#form_submit").css("color","white");
-	   }else{
-	         feedback_error("#confirm_password");           	
-	         $("button#form_submit").prop("disabled","true");
-	         $("button#form_submit").css("color","black");
+    if($("#pwd").val()===$("#pwd2").val()){
+          feedback_success("#confirm_password");
+           $("button#form_submit").removeAttr("disabled");
+           $("button#form_submit").css("color","white");
+     }else{
+           feedback_error("#confirm_password");             
+           $("button#form_submit").prop("disabled","true");
+           $("button#form_submit").css("color","black");
 
-   		 }
-    }		 
+       }
+    }    
 }
       
    function feedback_success(putfeedback){
@@ -505,4 +554,3 @@ function doneTyping () {
    
   });
   
-   

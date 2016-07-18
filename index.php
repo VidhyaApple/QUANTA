@@ -16,10 +16,11 @@ session_start();
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap-timepicker.min.css">
 
-    <link rel="stylesheet" type="text/css" href="css/ht.css">
-    
+    <link rel="stylesheet" type="text/css" href="css/ht.css"> 
+    <style class="style"></style>   
 </head>
 <body>
+
 <nav class="navbar navbar-inverse navbar-fixed-top">
        
             <div class="navbar-header ">
@@ -53,12 +54,15 @@ session_start();
 <div class="content-area">
 
 </div><!-- div-content area -end -->
-
+<!-- <div id="img-load" class="absolute-centering">
+<img class="load-img" src="images/ajaxloader.gif" />
+<p class="load-img" style="color:white">QuANTA is getting info for you....</p>
+</div> -->
 </div>  <!-- div-container-end -->
 <nav class="visible-xs navbar navbar-inverse navbar-fixed-bottom">
               
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="col-xs-4"><a href="#" class="home_nav" style="font-size:1.6em"><span class="glyphicon glyphicon-home"></span></a></li>
+                    <li class="col-xs-4"><a href="#" class="home_nav" style="font-size:1.6em"><span class="glyphicon glyphicon-refresh"></span></a></li>
                     <li class="col-xs-4"><a href="#" class="viewactivity_nav" style="font-size:1.6em"><span class="glyphicon glyphicon-eye-open"></span></a></li>
                     <li class="col-xs-4"><a href="#" class="logout_nav" style="font-size:1.6em"><span class="glyphicon glyphicon-log-out"></span></a></li>
                 </ul>
