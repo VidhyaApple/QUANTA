@@ -2,7 +2,7 @@
 session_start();
 error_reporting(E_ALL & ~E_NOTICE);
 ?>
-
+<!-- test git -->
 <div class="well centering col-md-8" id="well_entry" >
 
   <div class="row">
