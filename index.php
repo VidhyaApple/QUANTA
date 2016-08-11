@@ -16,11 +16,10 @@ session_start();
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap-timepicker.min.css">
 
-    <link rel="stylesheet" type="text/css" href="css/ht.css"> 
-    <style class="style"></style>   
+    <link rel="stylesheet" type="text/css" href="css/ht.min.css">
+    <style></style>
 </head>
 <body>
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
        
             <div class="navbar-header ">
@@ -35,7 +34,7 @@ session_start();
             <div>
                 <ul class="nav navbar-nav navbar-right visible-md visible-lg">
                     <li><a href="#" class="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li><a href="#" class="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
+                    <li class="tohide"><a href="#" class="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
                     <li><a href="#" class="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                 </ul>
             </div>
@@ -43,21 +42,25 @@ session_start();
             <div class="collapse navbar-collapse" id="navbar_collapse" >
                 <ul class="nav navbar-nav navbar-right visible-xs visible-sm">
                     <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="home_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="viewactivity_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
+                    <li data-toggle="collapse" data-target="#navbar_collapse" class="tohide"><a href="#" class="viewactivity_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
                     <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="logout_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                 </ul>           
         </div>
       </nav>
 
 <div class="container scrollable">
-
+<!-- <marquee class="text-danger visible-xs visible-sm" style="padding:1px;font-size:1.2em;font-weight:bold">QuANTA 1.2 is released. Go to "http://quotequads.co.in/quanta/download" to install. Ignore if updated.</marquee> -->
 <div class="content-area">
 
 </div><!-- div-content area -end -->
-<!-- <div id="img-load" class="absolute-centering">
-<img class="load-img" src="images/ajaxloader.gif" />
-<p class="load-img" style="color:white">QuANTA is getting info for you....</p>
-</div> -->
+
+<div id="img-load" class="absolute-centering">
+    <img class="load-img" src="images/clock.gif" />
+    <p class="load-text"></p>
+    
+</div>
+
+
 </div>  <!-- div-container-end -->
 <nav class="visible-xs navbar navbar-inverse navbar-fixed-bottom">
               

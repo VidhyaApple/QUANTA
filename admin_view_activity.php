@@ -1,3 +1,6 @@
+<!-- <div class="well well-sm to_show_summary text-center"> 
+<h5>ADMIN</h5>
+</div> -->
 <div id="toolbar" class="btn-group">
        <div class="btn-group">
             <button class="btn btn-primary dropdown-toggle month_name" data-toggle="dropdown" ></button>            
@@ -7,15 +10,12 @@
             <button class="btn btn-primary dropdown-toggle year_name" data-toggle="dropdown" ></button>
             <ul class="dropdown-menu year_filter_li"></ul>   
       </div>
-      <div class="btn-group">           
-            <button class="btn btn-primary clear_filter" >CLEAR</button>             
+      <div class="btn-group" id="emp">           
+            <button class="btn btn-primary dropdown-toggle emp_name" data-toggle="dropdown" ></button>
+            <ul class="dropdown-menu emp_filter_li"></ul>   
       </div>
   </div>
-  <div class="well to_show_summary">    
-    <p style="text-align:center" class="month_year"></p>    
-      <p class="month_total_time"></p>
-      <p class="month_total_pages"></p>    
-  </div>
+
     <table id="activity_table"    
            data-classes="table table-hover customtable"
            data-show-refresh="true"

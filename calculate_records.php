@@ -8,12 +8,12 @@ class Record_Read
 	public $new_conn;
 	public $table="ht_record";
 	public $user_id;
-	public $who;
+	
 
 	function __construct()
 	{   
       $this->new_conn=new Db_con();
-       $this->user_id=$_SESSION["user_id"];
+      $this->user_id=$_SESSION["user_id"];      
       
 	}
 	
@@ -22,10 +22,15 @@ class Record_Read
    	     return array($todayData[0][total_pages],$todayData[0][total_time]);
    }	
    public function getData($who){
- 		$this->who=$who;
- 		$todayDate=date("d-m-Y l");
-	    $query= $this->who ==="user" ? "SELECT * FROM `$this->table` where `user_id`='$this->user_id' " : "SELECT * FROM `$this->table` where `date`= '$todayDate' and `user_id`='$this->user_id'";		
-		 $read=$this->new_conn->conn->query($query);
+   		$todayDate=date("d-m-Y l");
+ 		if($who==="user"){
+ 			$query= "SELECT * FROM `$this->table` where `user_id`='$this->user_id' ";
+ 		}elseif($who==="today"){
+ 			$query= "SELECT * FROM `$this->table` where `date`= '$todayDate' and `user_id`='$this->user_id'";
+	    }else{
+	    	$query= "SELECT * FROM `$this->table` where `user_id`='$who'";
+	    }	
+		$read=$this->new_conn->conn->query($query);
 		 
 		 if($read->num_rows > 0){
 		     	$raw_output = [];
@@ -33,7 +38,7 @@ class Record_Read
     			$raw_output[] = $row;}
 		
 		 }else{
-		 $raw_output=NULL;
+		 		$raw_output=NULL;
 		 }
 		 return $this->processData($raw_output);
 		}

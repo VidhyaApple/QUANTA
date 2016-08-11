@@ -1,6 +1,14 @@
 <?php
 session_start();
-echo  isset($_SESSION["user_id"]) ? "set": "notset";
+if(isset($_SESSION["user_id"])){
+	   if($_SESSION["name"]==="ADMIN"){
+	   	  echo "admin_session,".$_SESSION["user_id"];
+	   }else{
+	   	  echo "user_session,".$_SESSION["user_id"];
+	   }
+}else{
+	echo "no_session,no";
+}
 	
 
 ?>
