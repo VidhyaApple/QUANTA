@@ -1,7 +1,4 @@
-<!-- <div class="well well-sm to_show_summary text-center"> 
-<h5>ADMIN</h5>
-</div> -->
-<div id="toolbar" class="btn-group">
+<div id="toolbar_admin" class="btn-group">
        <div class="btn-group">
             <button class="btn btn-primary dropdown-toggle month_name" data-toggle="dropdown" ></button>            
             <ul class="dropdown-menu month_filter_li"></ul>
@@ -10,55 +7,113 @@
             <button class="btn btn-primary dropdown-toggle year_name" data-toggle="dropdown" ></button>
             <ul class="dropdown-menu year_filter_li"></ul>   
       </div>
-      <div class="btn-group" id="emp">           
-            <button class="btn btn-primary dropdown-toggle emp_name" data-toggle="dropdown" ></button>
-            <ul class="dropdown-menu emp_filter_li"></ul>   
-      </div>
-  </div>
-
-    <table id="activity_table"    
-           data-classes="table table-hover customtable"
+     
+ </div> 
+        
+        <table id="table_admin"
+           data-toolbar="#toolbar_admin"                     
+           data-fixed-columns="true"
+           data-fixed-number=1
+           data-classes="table customtable2"
            data-show-refresh="true"
-           data-show-toggle="true"
+           data-show-toggle="true"           
            data-show-columns="true"
-           data-sortable="false"           
-           data-pagination="false"
-           data-pagination-v-align="top"
-           data-pagination-h-align="left"
-           data-show-pagination-switch="true"
-           data-toolbar="#toolbar"
-           data-toolbar-align="left"
-           data-buttons-align="right">
+           data-sortable="true"
+           data-fixed-columns="true"
+           data-fixed-number=1           
+           data-pagination="true"
+           data-show-pagination-switch="true"          
+           data-show-export="true"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           data-page-size="20"           
+           >
+            <!-- <thead>
+             <tr>
+                <th data-field="date" data-title-tooltip="DATE">DATE</th>
+                <th data-field="day" data-title-tooltip="DAY">DAY</th>
+                <th data-field="total_pages" data-title-tooltip="TOTAL PAGES PER DAY">PAGES</th>
+                <th data-field="total_time" data-title-tooltip="TOTAL HOURS PER DAY">HOURS</th>   
+             </tr>
+             </thead>
+             <tbody>
+                     <tr>
+                           <td>1</td>
+                             <td>2</td>
+                             <td>3</td>
+                             <td>4</td>                            
+                     </tr>
+                     <tr>
+                             <td>1</td>
+                             <td>2</td>
+                             <td>3</td>
+                             <td>4</td>
+                             
+                     </tr>
+                     <tr>
+                             <td>1</td>
+                             <td>2</td>
+                             <td>3</td>
+                             <td>4</td>                             
+                     </tr>
+                     <tr>
+                             <td>1</td>
+                             <td>2</td>
+                             <td>3</td>
+                             <td>4</td>                             
+                     </tr>
+                    
+             </tbody> -->
     </table>
-
-
-      <!-- Modal -->
-<div class="modal fade" id="details_table_modal" role="dialog">
-    <div class="modal-dialog">
     
-        <!-- Modal content-->
-        <div class="modal-content">
-           <!-- header -->
-          <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-               <h4 class="modal-title text-center" id="date_day"></h4>
-          </div>
 
-           <!-- body -->
-          <div class="modal-body">
-            <table id="details_table"
-                   data-classes="table table-hover customtable"
-                   data-show-refresh="true"
-                   data-show-toggle="true"
-                   data-show-columns="true">                  
-            </table>
-          </div>  
-          <!-- footer -->
-          <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+<script>
+   //ADMIN TABLE 
+//
+//
+function getDaysInMonth(admonth, adyear) {
+     var date = new Date(adyear, admonth, 1);
+     var days = [];
+     while (date.getMonth() === admonth) {
+        days.push(new Date(date));
+        date.setDate(date.getDate() + 1);
+     }
+     return days;
+}
 
-      </div>    <!-- model-content-ends-->
-      
-    </div> <!--modal-dialog-ends-->
-</div> <!--modal ends-->
+function fillColumnsByDate(admonth,adyear){
+    var calendar=getDaysInMonth(admonth, adyear);
+    var to_fill_column=[];
+    
+    for(var i=0;i<calendar.length;i++){
+        var oneday=calendar[i].toString().split(" ");
+        // to_fill_column.push(
+        //         {
+        //         title:oneday[2],
+        //         field:oneday[2]
+        //         }
+        //         );
+        
+    }   
+
+    
+   
+}  
+ 
+//fillColumnsByDate(4,2016);
+
+
+        function getHeight() {
+        return $(window).height() - $("#toolbar_admin").outerHeight(true)-100;
+        }
+        $(window).resize(function () {
+            $('#table_admin').bootstrapTable('resetView', {
+                height: getHeight()
+            });
+        });
+   
+
+$("#table_admin td").attr({"title":"DOUBLE CLICK TO SEE DETAILS","data-container":"body","data-toggle":"tooltip","data-placement":"bottom"});
+$(function(){
+    $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+  });
+</script>

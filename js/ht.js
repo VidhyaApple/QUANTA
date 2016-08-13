@@ -63,26 +63,18 @@ function checkSession(handleData){
 
 function loadFile(file){    
     $.get(file, function(contentdata){ 
-    $(".content-area").empty().html(contentdata).fadeIn();
-    if(file==="entry.php"){
-      showTodayData();
-    }
-    if(file==="admin_view_activity.php"){
-         if(emp_user_id !==""){
-            fillTable(emp_user_id,"admin_view_activity.php"); 
-          }else{
-            fillDropdown();
-          }             
-    }
 
-  });
+      $(".content-area").empty().html(contentdata).fadeIn();
+      if(file==="entry.php")showTodayData();
+      if(file==="admin_view_activity.php")fillTable("admin","admin_view_activity.php"); 
+
+   });
   
   month="";
   year="";
   toSearch="";
 
 }
-
 
 checkSession(function(output){ 
       outputs=output.split(",");    
@@ -275,14 +267,11 @@ function feedback_error(putfeedback){
 //
 //  
 var session_data;
-var activity_table_temp;
 var tableData;
 var month_total_pages;
 var month_total_hrs;
 var month="";
 var year="";
-var emp_user_id="";
-var emp_name="";  
 var toSearch="";
 var currentTime = new Date();
 var currentYear=currentTime.getFullYear();
@@ -385,147 +374,28 @@ $(document).on("keydown","input[name='journal_id']",function(){
 
 });
 //TIME PICKER ENDS
-  
-var activity_columns=[
-  {
-    "field": "date",
-    "title": "DATE"},
-  {
-    "field": "day",
-    "title": "DAY"},
-  {
-    "field": "total_pages",
-    "title": "PAGES"},
-  {
-    "field": "total_time",
-    "title": "HOURS"}];
-
-var details_columns = [
-  [{
-    "title": "TIME",
-    "colspan": 3,
-    "rowspan": 1,
-    "align":"center"
-  }, {
-    "title": "PAGES",
-    "colspan": 3,
-    "rowspan": 1,
-    "align":"center"
-  },{
-    "field": "journal_id",
-    "title": "JOURNAL/BOOK ID",
-    "colspan": 1,
-    "rowspan": 2,
-    "align":"center"
-  }], 
-
-  [{
-    "field": "from",
-    "title": "FROM",
-    "colspan": 1,
-    "rowspan": 1
-  }, {
-    "field": "to",
-    "title": "TO",
-    "colspan": 1,
-    "rowspan": 1
-  }, {
-    "field": "single_time_total",
-    "title": "TOTAL",
-    "colspan": 1,
-    "rowspan": 1
-  }, {
-    "field": "pro",
-    "title": "PRO",
-    "colspan": 1,
-    "rowspan": 1
-  }, {
-    "field": "qc",
-    "title": "QC",
-    "colspan": 1,
-    "rowspan": 1
-  }, {
-    "field": "single_pages_total",
-    "title": "TOTAL",
-    "colspan": 1,
-    "rowspan": 1
-  }]
-];
 
 // FILTER TABLE BUTTONS
-// 
-//month filter 
-//
-// $(document).on("click",".month_filter_li li a",function(){
-//   $(".month_filter_li").css("z-index","9999");
-// });
 
 $(document).on("click",".month_filter_li li a",function(){
-      if(($("#emp").is(':visible')) && (emp_user_id==="")){
-          alert("Please select employee first!");
-      }else{        
+       
         $('.month_name').html($(this).text()+ " <span class='caret'></span>");
         month= monthNames[$(this).text()];       
         filterTable();
-      }         
+               
 });
 //year filter
 $(document).on("click",".year_filter_li li a",function(){      
-      if(($("#emp").is(':visible')) && (emp_user_id==="")){
-          alert("Please select employee first!");
-      }else{ 
+     
          $('.year_name').html($(this).text()+ " <span class='caret'></span>");
          year=$(this).text();
          filterTable();     
-      }
-});
-
-//employee filter
-$(document).on("click",".emp_filter_li li a",function(){
-
-       $('.emp_name').html($(this).text()+ " <span class='caret'></span>");
-       emp_user_id=$(this).attr("data-id");
-       emp_name=$(this).text();
-       fillTable(emp_user_id,"admin_view_activity.php");            
-       filterTable();
-});
-//filter clear
-$(document).on("click",".clear_filter",function(){
-        $.each(monthNames, function (k, v) {
-            if (v === currentMonth)  $('.month_name').html(k + " <span class='caret'></span>"); 
-        });
-        $('.year_name').html(currentYear+" <span class='caret'></span>");
-          
-        month="";
-        year="";
-        toSearch="";
-        filterTable();
-
- });
-function clear_dropdown(){
-       var monthname_in_dropdown= month!=="" ? month : currentMonth;
-
-       $.each(monthNames, function (k, v) {
-            if (v === monthname_in_dropdown)  $('.month_name').html(k + " <span class='caret'></span>"); 
-        });
-        if(year!==""){
-            $('.year_name').html(year+" <span class='caret'></span>");
-        }else{
-            $('.year_name').html(currentYear+" <span class='caret'></span>");
-        } 
-
-        if($("#emp").is(':visible')){
-              if(emp_user_id!==""){
-                 $('.emp_name').html(emp_name+" <span class='caret'></span>");
-              }else{
-                  $('.emp_name').html("EMPLOYEES <span class='caret'></span>");
-              }
-        } 
       
-}
+});
 
  //filter method
 function filterTable(){ 
+
         month_total_pages=0;
         month_total_hrs=0;
         month_total_hrs_array=[];
@@ -571,38 +441,28 @@ $(".viewactivity_nav").on("click",function(){
         
         if(outputs[0]==="user_session"){          
           fillTable("user","view_activity.php");
-        }else if(outputs[0]==="admin_session"){          
-              if(emp_user_id !==""){
-                fillTable(emp_user_id,"admin_view_activity.php"); 
-              }else{
-                fillDropdown();
-              }                      
+        }else if(outputs[0]==="admin_session"){             
+          fillTable("admin","admin_view_activity.php");                     
         }else{
           fade_alert("PLEASE LOG IN TO VIEW ACTIVITY!");
-        }   
-    
+        }     
   });
 
 function fillTable(get_name,file_name){
   $.getJSON('ajax_response.php',{fulldata:get_name}).done(function(data){
                  
-                $.get(file_name, function(contentdata){     
-                  $(".content-area").empty().html(contentdata);
-                  tableData=data;
-                  fillDropdown();                  
-                  $("#activity_table").bootstrapTable({
-                              columns:activity_columns 
-                           });
-                        filterTable();
-                        $('#details_table').bootstrapTable({
-                              columns:details_columns                
-                        });    
-                         
-                });           
+        $.get(file_name, function(contentdata){     
+            $(".content-area").empty().html(contentdata);
+            tableData=data;
+            fillDropdown();                  
+            $("#activity_table").bootstrapTable();
+            filterTable();
+            $('#details_table').bootstrapTable();                         
+        });           
                 
-                }).fail(function(){                  
-                  fade_alert("ERROR IN LOADING ACTIVITY");
-                });
+    }).fail(function(){                  
+      fade_alert("ERROR IN LOADING ACTIVITY");
+    });
 }
 
 function showTodayData(){
@@ -645,15 +505,22 @@ function showTodayData(){
 
   function fillDropdown(){
 
-      clear_dropdown();
+      var monthname_in_dropdown= month!=="" ? month : currentMonth;
+
+       $.each(monthNames, function (k, v) {
+            if (v === monthname_in_dropdown)  $('.month_name').html(k + " <span class='caret'></span>"); 
+        });
+        if((year!=="") &&  (year!==undefined)){ 
+
+            $('.year_name').html(year+" <span class='caret'></span>");
+        }else{
+            $('.year_name').html(currentYear+" <span class='caret'></span>");
+        } 
        //month
-       var monthNames_dropdown = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-        
-          var li_month="";
-         for (var mon = 0 ; mon < monthNames_dropdown.length; mon++){
-             li_month += "<li><a href='#'>"+ monthNames_dropdown[mon] +"</a></li>";
-         }
+         var li_month="";
+         $.each(monthNames, function (k, v) {
+             li_month += "<li><a href='#'>"+ k +"</a></li>";
+         });
         //year
        var start = 2015;
        var end = new Date().getFullYear();
@@ -662,30 +529,35 @@ function showTodayData(){
            li_year += "<li><a href='#'>"+ year +"</a></li>";
        }
        $(".month_filter_li").html(li_month);
-       $(".year_filter_li").html(li_year);
-
-       if($("#emp").is(':visible')){
-          var emp_name_li="";
-          $.getJSON('ajax_response.php',{emp_dropdown:"emp"}).done(function(data){
-              if(data==="No Employees"){
-                  emp_name_li = "<li><a href='#'>"+data+"</a></li>";
-              }else{
-                  $.each(data, function (key, val) {                    
-                    emp_name_li += "<li><a href='#' data-id='"+val.user_id+"'>"+ val.Name +"</a></li>";
-                  });
-              }  
-              $(".emp_filter_li").html(emp_name_li);
-              
-          });  
-       } 
- 
+       $(".year_filter_li").html(li_year); 
 }
-
-
-
 //ACTIVITY TABLE ENDS
+//
+//
+$('#table_admin').bootstrapTable({
+           
+            col: [
+                
+                    {
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'Item ID',
+                        field: 'id',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                       
+                    }, {
+                        title: 'Item Detail',
+                        colspan: 3,
+                        align: 'center'
+                    }
+                ]
+        });
 
-
-
-   
 });  //end of main document.ready function

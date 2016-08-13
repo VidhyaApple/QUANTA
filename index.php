@@ -13,10 +13,10 @@ session_start();
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
-
+    <link rel="stylesheet" href="css/rawgit_fixed_column.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-timepicker.min.css">
 
-    <link rel="stylesheet" type="text/css" href="css/ht.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ht.css">
     <style></style>
 </head>
 <body>
@@ -78,14 +78,16 @@ session_start();
 <!-- jquery min js -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script> -->
-
 <!-- bootstrap min js -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
+<!-- bootstrap table -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="js/fixed_column_table.js"></script>
+<script type="text/javascript" src="js/export_table.js"></script>
+<script type="text/javascript" src="js/plugin_export_table.js"></script>    
 
-
+<!-- bootstrap timepicker -->
 <script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>
 
 <!-- own js -->

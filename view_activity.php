@@ -7,9 +7,7 @@
             <button class="btn btn-primary dropdown-toggle year_name" data-toggle="dropdown" ></button>
             <ul class="dropdown-menu year_filter_li"></ul>   
       </div>
-      <div class="btn-group">           
-            <button class="btn btn-primary clear_filter" >CLEAR</button>             
-      </div>
+    
   </div>
   <div class="well to_show_summary">    
     <p style="text-align:center" class="month_year"></p>    
@@ -29,6 +27,15 @@
            data-toolbar="#toolbar"
            data-toolbar-align="left"
            data-buttons-align="right">
+
+           <thead>
+             <tr>
+                <th data-field="date" data-title-tooltip="DATE">DATE</th>
+                <th data-field="day" data-title-tooltip="DAY">DAY</th>
+                <th data-field="total_pages" data-title-tooltip="TOTAL PAGES PER DAY">PAGES</th>
+                <th data-field="total_time" data-title-tooltip="TOTAL HOURS PER DAY">HOURS</th>   
+             </tr>
+             </thead>
     </table>
 
 
@@ -50,7 +57,24 @@
                    data-classes="table table-hover customtable"
                    data-show-refresh="true"
                    data-show-toggle="true"
-                   data-show-columns="true">                  
+                   data-show-columns="true">
+
+             <thead>
+                   <tr>
+                      <th colspan="3" data-align="center">TIME</th>
+                      <th colspan="3" data-align="center">PAGES</th>
+                      <th rowspan="2" data-align="center" data-field="journal_id" data-title-tooltip="NAME OR ID OF JOURNAL / BOOK">JOURNAL/BOOK ID</th>
+                       
+                   </tr>
+                   <tr>
+                      <th data-field="from" data-align="center" data-title-tooltip="FROM TIME WHEN WORK IS STARTED">FROM</th>
+                      <th data-field="to" data-align="center" data-title-tooltip="TO TIME WHEN WORK IS OVER">TO</th>
+                      <th data-field="single_time_total" data-align="center" data-title-tooltip="TOTAL HOURS FOR THAT SESSION">TOTAL</th>
+                      <th data-field="pro" data-align="center" data-title-tooltip="PRODUCTION PAGES">PRO</th>
+                      <th data-field="ac" data-align="center" data-title-tooltip="QUALITY CONTROL PAGES">QC</th>
+                      <th data-field="single_pages_total" data-align="center" data-title-tooltip="TOTAL PAGES FOR THAT SESSION">TOTAL</th>   
+                   </tr>
+             </thead>                    
             </table>
           </div>  
           <!-- footer -->
