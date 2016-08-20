@@ -17,29 +17,31 @@ class Record_Read
       
 	}
 	
-   public function getTodayData($who){
-   	     $todayData=$this->getData($who);
+   public function getTodayData($who,$m,$y){
+   	     $todayData=$this->getData($who,$m,$y);
    	     return array($todayData[0][total_pages],$todayData[0][total_time]);
    }	
-   public function getData($who){
+   public function getData($who,$mon,$year){
+   	    
    		$todayDate=date("d-m-Y l");
  		if($who==="user"){
- 			$query= "SELECT * FROM `$this->table` where `user_id`='$this->user_id' ";
+ 			$query= "SELECT * FROM `$this->table` where `user_id`='$this->user_id' and `date` like '%$mon-$year%'";
  		}elseif($who==="today"){
  			$query= "SELECT * FROM `$this->table` where `date`= '$todayDate' and `user_id`='$this->user_id'";
 	    }else{
-	    	$query= "SELECT * FROM `$this->table` where `user_id`='$who'";
+	    	$query= "SELECT * FROM `$this->table` where `date` like '%$mon-$year%'";
 	    }	
 		$read=$this->new_conn->conn->query($query);
 		 
 		 if($read->num_rows > 0){
-		     	$raw_output = [];
+		 	    $raw_output = [];
 		        while ($row = $read->fetch_assoc()) {
     			$raw_output[] = $row;}
 		
 		 }else{
 		 		$raw_output=NULL;
 		 }
+		 print_r($row_output);
 		 return $this->processData($raw_output);
 		}
 	
@@ -154,7 +156,8 @@ class Record_Read
 	}
 
 
-}		
-
+}	
+//$record=new Record_Read();
+//echo json_encode($record->getData("user","08","2016"));
 
 ?>

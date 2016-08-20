@@ -85,7 +85,8 @@ session_start();
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
 <script type="text/javascript" src="js/fixed_column_table.js"></script>
 <script type="text/javascript" src="js/export_table.js"></script>
-<script type="text/javascript" src="js/plugin_export_table.js"></script>    
+<script type="text/javascript" src="js/plugin_export_table.js"></script> 
+
 
 <!-- bootstrap timepicker -->
 <script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>

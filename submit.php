@@ -32,7 +32,8 @@ class ht_crud
   				// 
   				if($login_email==="quads_admin"){
   					if($login_email===$login_password){
-  						$this->result="admin_loggedin";
+  						$row=$this->ht_read_name_id();
+  						$this->result=$row;
   						$_SESSION["email"]="admin";
              			$_SESSION["name"]="ADMIN";
              			$_SESSION["user_id"]="admin";
@@ -40,6 +41,8 @@ class ht_crud
   						$this->result="loggedin_dont_match";
   					}  				
   				//ADMIN LOGIN -END	
+  				//
+  				//
   				}else{
   					$this->result=$this->ht_read($login_email,$login_password);
   				}
@@ -146,16 +149,16 @@ class ht_crud
 	}
 
 	public function ht_read_name_id(){
-		$this->new_conn=new Db_con();
-		$read_sql="SELECT * FROM `$this->table_user`";
+		
+		$read_sql="SELECT `user_id`,`Name` FROM `$this->table_user`";
 		$read=$this->new_conn->conn->query($read_sql); 
 		if ($read->num_rows > 0) {
 		    	$row=$read->fetch_all(MYSQLI_ASSOC);		    	
 		    	return $row;
 		}else{
-			return "No Employees";
+			return "NO EMPLOYEES";
 		} 
-		$this->new_conn->conn->close();   	
+		
 	}
 
 	public function check_empty($str){

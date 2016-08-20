@@ -9,21 +9,22 @@
       </div>
     
   </div>
-  <div class="well to_show_summary">    
+<!--   <div class="well to_show_summary">    
     <p style="text-align:center" class="month_year"></p>    
       <p class="month_total_time"></p>
       <p class="month_total_pages"></p>    
-  </div>
-    <table id="activity_table"    
+  </div> -->
+    <table id="activity_table"
+           
            data-classes="table table-hover customtable"
-           data-show-refresh="true"
+           
            data-show-toggle="true"
            data-show-columns="true"
-           data-sortable="false"           
-           data-pagination="false"
+           data-pagination="true"
+           data-page-list="[10, 25, ALL]"
+           data-page-size="20"            
            data-pagination-v-align="top"
-           data-pagination-h-align="left"
-           data-show-pagination-switch="true"
+           data-pagination-h-align="left" 
            data-toolbar="#toolbar"
            data-toolbar-align="left"
            data-buttons-align="right">
@@ -53,7 +54,7 @@
 
            <!-- body -->
           <div class="modal-body">
-            <table id="details_table"
+            <table id="details_table"              
                    data-classes="table table-hover customtable"
                    data-show-refresh="true"
                    data-show-toggle="true"

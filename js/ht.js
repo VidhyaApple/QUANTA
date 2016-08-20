@@ -1,5 +1,39 @@
 $(document).ready(function(){
 
+//VARIABLE INITIALISATION FOR TIME PICKER AND STORING DATAS AND METHODS
+//
+//  
+var session_data;
+var currentTime = new Date();
+var currentYear=currentTime.getFullYear();
+var currentDate=currentTime.getDate();
+var currentMonth=getCurrentMonth_in_number();
+var month="";
+var year="";
+
+var emp_row;
+var todayDate=currentMonth+"-"+currentDate+"-"+currentYear;
+var monthNames = {"JAN": "01","FEB": "02","MAR": "03","APR": "04","MAY": "05","JUN": "06","JUL": "07","AUG": "08","SEP": "09","OCT": "10","NOV": "11","DEC": "12"};  
+
+//METHODS
+//CURRENT TIME
+function getTime() {
+   
+  var h = (currentTime.getHours() % 12) || 12; // show midnight & noon as 12
+  return (
+    ( h < 10 ? '0' : '') + h +
+    ( currentTime.getMinutes() < 10 ? ':0' : ':') + currentTime.getMinutes() +
+                // optional seconds display
+    // (currentTime.getSeconds() < 10 ? ':0' : ':') + currentTime.getSeconds() + 
+    ( currentTime.getHours() < 12 ? ' AM' : ' PM' )
+  );
+//CURRENT MONTH  
+}
+function getCurrentMonth_in_number(){  
+  var mon = currentTime.getMonth() + 1;   
+  return (mon!==11 && mon !==12 && mon !==10) ?  ""+0+mon : mon ;
+}
+
 //INITIAL SETTINGS TO BE DONE
 //
 //
@@ -66,15 +100,11 @@ function loadFile(file){
 
       $(".content-area").empty().html(contentdata).fadeIn();
       if(file==="entry.php")showTodayData();
-      if(file==="admin_view_activity.php")fillTable("admin","admin_view_activity.php"); 
-
+      if(file==="admin_view_activity.php")fillColumnsByDate(currentMonth,currentYear);
+      if(file==="view_activity.php")filterTable();
    });
-  
-  month="";
-  year="";
-  toSearch="";
-
-}
+ 
+ }
 
 checkSession(function(output){ 
       outputs=output.split(",");    
@@ -117,6 +147,17 @@ $(".home_nav").on("click",function(){
       
 }); 
 
+$(".viewactivity_nav").on("click",function(){
+        
+        if(outputs[0]==="user_session"){          
+          loadFile("view_activity.php");   
+        }else if(outputs[0]==="admin_session"){             
+          loadFile("admin_view_activity.php");                     
+        }else{
+          fade_alert("PLEASE LOG IN TO VIEW ACTIVITY!");
+        }     
+  });
+
  $(".logout_nav").on("click",function(){
     var logout_alert="";
     if(outputs.length>0) outputs[0]=outputs[1]="";
@@ -151,7 +192,7 @@ $(document).on('submit', '.form_login_signup', function(){
     
     $.post('ajax_response.php', $(this).serialize())
     .done(function(data){
-
+      var jsondata=$.parseJSON(data);
             if(data=="inserted"){ 
                 $(".panel-group").fadeOut('slow', function(){   
                 fade_alert_loadfile('Signed up Successfully!',"entry.php"); });        
@@ -170,11 +211,13 @@ $(document).on('submit', '.form_login_signup', function(){
             }else if(data=="loggedin_dont_match"){
                 $("#em_pwd_error").removeClass("hide");
 
-            }else if(data=="admin_loggedin"){
+            }else if((typeof jsondata)==="object"){
+              
                 checkSession(function(output){ 
                     outputs=output.split(",");    
                     hideMenu();
-                 });  
+                 });
+                emp_row=jsondata;   
                 $(".panel-group").fadeOut('slow', function(){    
                 //location.reload();                             
                 fade_alert_loadfile("Logged in successfully","admin_view_activity.php"); 
@@ -182,6 +225,7 @@ $(document).on('submit', '.form_login_signup', function(){
                 }); 
                 
             }else{
+              
                 fade_alert("FAILED TO SUBMIT DATA!");
             }
 
@@ -192,7 +236,6 @@ $(document).on('submit', '.form_login_signup', function(){
     return false;
 }); 
 
-   
 //RECORD ENTRY FORM
 $(document).on('submit', '.form_entry', function(){
         
@@ -262,41 +305,266 @@ function feedback_error(putfeedback){
 //PAGE 1 END
 //
 //
+//PAGE 3 VIEW ACTIVITY 
 //
-//VARIABLE INITIALISATION FOR TIME PICKER AND STORING DATAS
 //
-//  
-var session_data;
-var tableData;
-var month_total_pages;
-var month_total_hrs;
-var month="";
-var year="";
-var toSearch="";
-var currentTime = new Date();
-var currentYear=currentTime.getFullYear();
-var currentDate=currentTime.getDate();
-var currentMonth=getCurrentMonth();
-var todayDate=currentMonth+"-"+currentDate+"-"+currentYear;
-var monthNames = {"JAN": "01","FEB": "02","MAR": "03","APR": "04","MAY": "05","JUN": "06","JUL": "07","AUG": "08","SEP": "09","OCT": "10","NOV": "11","DEC": "12"};
+    // FILTER TABLE BUTTONS
 
-//CURRENT TIME
-function getTime() {
+$(document).on("click",".month_filter_li li a",function(){
+       
+        $('.month_name').html($(this).text()+ " <span class='caret'></span>");
+        month= monthNames[$(this).text()];       
+        filterTable();
+               
+});
+//year filter
+$(document).on("click",".year_filter_li li a",function(){      
+     
+         $('.year_name').html($(this).text()+ " <span class='caret'></span>");
+         year=$(this).text();
+         
+         filterTable();     
+      
+});
+
+ //filter method
+function filterTable(){         
+      
+      if(month ==="") month=currentMonth;
+      if(year ==="") year=currentYear;
+      fillDropdown(month,year);
+      if(outputs[1]!=="admin"){
+
+            $.getJSON('ajax_response.php',{user:"user",month:month,year:year}).done(function(data){        
+                    
+                    $('#activity_table').bootstrapTable("destroy").bootstrapTable({height:getHeight()}).bootstrapTable('load',data);
+                    $('#details_table').bootstrapTable("destroy").bootstrapTable();
+                    
+              
+            }).fail(function(){                  
+                  fade_alert("ERROR IN LOADING EMPLOYEES RECORDS");
+            });          
+         
+
+       }else{
+            if(outputs[1]==="admin"){
+                
+                $.getJSON('ajax_response.php',{user:"admin",month:month,year:year}).done(function(data){
+                      $('#table_admin').bootstrapTable('load',data);
+
+                }).fail(function(){                  
+                  fade_alert("ERROR IN LOADING EMPLOYEES RECORDS");
+                });
+            }
+       }
+  } 
+
+function showTodayData(){
+  $.getJSON('ajax_response.php',{todaydata:"today"}).done(function(data){
+          var data_pages= data[0]===null ? 0 : data[0];
+          var data_hrs=data[1]===null ? "0 hrs" : data[1];
+
+           $("#today_record").html("TODAY: "+data_pages+" PAGES     <span class='badge label-as-badge'>"+data_hrs+"</span>");
+           
+          }).fail(function(){ 
+           
+            fade_alert("ERROR IN LOADING TODAY'S ACTIVITY");
+          });
+}
+
+
+  $(document).on('click-row.bs.table',"#activity_table", function (e, row, $element) {
+          var details_data=createDetailsData(row); 
+          $("#details_table_modal").modal();
+          $("#date_day").html(row.date+"  "+row.day);
+          $('#details_table').bootstrapTable("load",details_data);   
+  });
+
+  function createDetailsData(row){
+          var details_data=[];
+          for (var i = 0; i < row.time.length; i++) {
+              details_data.push({
+                from:row.time[i].from,          
+                to:row.time[i].to,
+                single_time_total:row.time[i].single_time_total,
+                pro:row.pages[i].pro,
+                qc:row.pages[i].qc,
+                single_pages_total:row.pages[i].single_pages_total,
+                journal_id:row.journal_id[i]
+            }); 
+
+          } 
+      return details_data;           
+  }
+
+  function fillDropdown(month,year){
+
+      var monthname_in_dropdown= month!=="" ? month : currentMonth;
+
+       $.each(monthNames, function (k, v) {
+            if (v === monthname_in_dropdown)  $('.month_name').html(k + " <span class='caret'></span>"); 
+        });
+
+       var year_in_dropdown= year!=="" ? year : currentYear;        
+      $('.year_name').html(year_in_dropdown+" <span class='caret'></span>");
+      
+        
+       //month
+         var li_month="";
+         $.each(monthNames, function (k, v) {
+             li_month += "<li><a href='#'>"+ k +"</a></li>";
+         });
+        //year
+       var start = 2015;
+       var end = new Date().getFullYear();
+       var li_year = "";
+       for(var year_for = start ; year_for <=end; year_for++){
+           li_year += "<li><a href='#'>"+ year_for +"</a></li>";
+       }
+       $(".month_filter_li").html(li_month);
+       $(".year_filter_li").html(li_year); 
+}
+//ACTIVITY TABLE ENDS
+//
+//
+//////ADMIN TABLE 
+//
+//
+function getDaysInMonth(admonth, adyear) {
+     admonth=parseInt(admonth, 10);
+     var date = new Date(adyear, admonth, 1);
+     var days = [];
+     while (date.getMonth() === admonth) {
+        days.push(new Date(date));
+        date.setDate(date.getDate() + 1);
+     }
+
+     return days;
+}
+
+function fillColumnsByDate(admonth,adyear){
+    
+    var calendar=getDaysInMonth(admonth, adyear);
+    var week=0;
+    var to_fill_column=[[{
+                          "title":"EMPLOYEES",
+                          "field":"emp",
+                           "rowspan":2
+                           
+                        }],[]];
    
-  var h = (currentTime.getHours() % 12) || 12; // show midnight & noon as 12
-  return (
-    ( h < 10 ? '0' : '') + h +
-    ( currentTime.getMinutes() < 10 ? ':0' : ':') + currentTime.getMinutes() +
-                // optional seconds display
-    // (currentTime.getSeconds() < 10 ? ':0' : ':') + currentTime.getSeconds() + 
-    ( currentTime.getHours() < 12 ? ' AM' : ' PM' )
-  );
-//CURRENT MONTH  
+    for(var i=0;i<calendar.length;i++){
+        var oneday=calendar[i].toString().split(" ");
+        if(((i+1)%7)===0){
+            week=week+1;
+            to_fill_column[0].push(                     
+                        {
+                          "title":oneday[2]+"<br>"+oneday[0],
+                          "field":oneday[2],
+                           "rowspan":1,
+                                                                             
+                           "align":"center"                         
+                        },
+                        {
+                          "title":"WEEK- "+week+"<br>TOTAL",
+                          "field":"week",
+                          "rowspan":1,
+                          "align":"center"             
+                                             
+                        }                          
+                );
+        to_fill_column[1].push(                     
+                        {
+                          "title":"PGS---HRS",
+                          "field":"pgs"             
+                                             
+                        },
+                        {
+                          "title":"PGS---HRS",
+                          "field":"pgs"             
+                                             
+                        }                          
+                );         
+
+
+
+        }else{  
+        to_fill_column[0].push(                     
+                        {
+                          "title":oneday[2]+"<br>"+oneday[0],
+                          "field":oneday[2],
+                           "rowspan":1,
+                                                                             
+                           "align":"center"                         
+                        }                        
+                );
+        to_fill_column[1].push(                     
+                        {
+                          "title":"PGS---HRS",
+                          "field":"pgs"             
+                                             
+                        }                        
+                );
+
+        }                 
+    }
+    to_fill_column[0].push(                     
+                        {
+                          "title":"MONTH<br>TOTAL",
+                          "field":"month_total",
+                           "rowspan":1,                                                                             
+                           "align":"center"                         
+                        }                        
+                );
+        to_fill_column[1].push(                     
+                        {
+                          "title":"PGS---HRS",
+                          "field":"total_pages"             
+                                             
+                        });
+                                          
+  
+    $('#table_admin').bootstrapTable({           
+            columns:to_fill_column,          
+            height:getHeight()
+    });
+    filterTable();   
 }
-function getCurrentMonth(){  
-  var mon = currentTime.getMonth() + 1;   
-  return (mon!==11 && mon !==12 && mon !==10) ?  ""+0+mon : mon ;
+ $(document).on('click-row.bs.table',"#table_admin", function (e, row, $element) {
+          var details_data=createDetailsData_admin(row); 
+          $("#details_table_admin_modal").modal();
+          $("#date_day").html(row.date+"  "+row.day);
+          $('#details_table_admin').bootstrapTable("load",details_data);   
+  });
+
+  function createDetailsData_admin(row){
+          var details_data=[];
+          for (var i = 0; i < row.time.length; i++) {
+              details_data.push({
+                from:row.time[i].from,          
+                to:row.time[i].to,
+                single_time_total:row.time[i].single_time_total,
+                pro:row.pages[i].pro,
+                qc:row.pages[i].qc,
+                single_pages_total:row.pages[i].single_pages_total,
+                journal_id:row.journal_id[i]
+            }); 
+
+          } 
+      return details_data;           
+  }
+
+//basic functions for admin table
+
+function getHeight() {
+return $('nav.navbar-fixed-bottom').is(':visible')?$(window).height() - $(".content-area").outerHeight(true)-150 :$(window).height() - $(".content-area").outerHeight(true)-100;
 }
+
+$("#table_admin td").attr({"title":"DOUBLE CLICK TO SEE DETAILS","data-container":"body","data-toggle":"tooltip","data-placement":"bottom"});
+$(function(){
+    $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+  });
+
 
 //TIMEPICKER
 //
@@ -375,189 +643,5 @@ $(document).on("keydown","input[name='journal_id']",function(){
 });
 //TIME PICKER ENDS
 
-// FILTER TABLE BUTTONS
-
-$(document).on("click",".month_filter_li li a",function(){
-       
-        $('.month_name').html($(this).text()+ " <span class='caret'></span>");
-        month= monthNames[$(this).text()];       
-        filterTable();
-               
-});
-//year filter
-$(document).on("click",".year_filter_li li a",function(){      
-     
-         $('.year_name').html($(this).text()+ " <span class='caret'></span>");
-         year=$(this).text();
-         filterTable();     
-      
-});
-
- //filter method
-function filterTable(){ 
-
-        month_total_pages=0;
-        month_total_hrs=0;
-        month_total_hrs_array=[];
-       
-      if(month ==="") month=currentMonth;
-      if(year ==="") year=currentYear;      
-      toSearch="-"+month+"-"+year;      
-      $('#activity_table').bootstrapTable('load', $.grep(tableData, function (row) {
-              if(row.date.indexOf(toSearch) !== -1){                
-                month_total_pages +=row.total_pages;         
-                month_total_hrs_array.push(row.total_time);
-                return true;
-              }             
-      }));    
-
-       if(outputs[1]!=="admin"){
-           month_total_hrs=sumUpMonthTime(month_total_hrs_array);
-           for(var key in monthNames){
-              if(monthNames[key]===month) $(".month_year").html("<b>"+key+"  -  "+year+"</b>");
-           }       
-           $(".month_total_time").html("<b>TOTAL HOURS: </b>"+month_total_hrs);
-           $(".month_total_pages").html("<b>TOTAL PAGES: </b>"+month_total_pages);
-       }
-  } 
-
-function sumUpMonthTime(times){
-  
-  var minutes=0;
-  for (var i = 0; i < times.length; i++) {
-    var time=times[i].replace(" hrs","");   
-    var splitted=time.split(":");
-    minutes =minutes + Number(splitted[0] * 60) + Number(splitted[1]);    
-  }  
-  
-  var hours = Math.floor(minutes/60);
-  minutes -= hours * 60; 
-  hours=hours.toString().length >=2 ? hours : "0"+hours;
-  minutes=minutes.toString().length===2 ? minutes : "0"+minutes;
-  return hours+":"+minutes+" hrs";
-}
- 
-$(".viewactivity_nav").on("click",function(){
-        
-        if(outputs[0]==="user_session"){          
-          fillTable("user","view_activity.php");
-        }else if(outputs[0]==="admin_session"){             
-          fillTable("admin","admin_view_activity.php");                     
-        }else{
-          fade_alert("PLEASE LOG IN TO VIEW ACTIVITY!");
-        }     
-  });
-
-function fillTable(get_name,file_name){
-  $.getJSON('ajax_response.php',{fulldata:get_name}).done(function(data){
-                 
-        $.get(file_name, function(contentdata){     
-            $(".content-area").empty().html(contentdata);
-            tableData=data;
-            fillDropdown();                  
-            $("#activity_table").bootstrapTable();
-            filterTable();
-            $('#details_table').bootstrapTable();                         
-        });           
-                
-    }).fail(function(){                  
-      fade_alert("ERROR IN LOADING ACTIVITY");
-    });
-}
-
-function showTodayData(){
-  $.getJSON('ajax_response.php',{todaydata:"today"}).done(function(data){
-          var data_pages= data[0]===null ? 0 : data[0];
-          var data_hrs=data[1]===null ? "0 hrs" : data[1];
-
-           $("#today_record").html("TODAY: "+data_pages+" PAGES     <span class='badge label-as-badge'>"+data_hrs+"</span>");
-           
-          }).fail(function(){ 
-            
-            fade_alert("ERROR IN LOADING TODAY'S ACTIVITY");
-          });
-}
-
-
-  $(document).on('click-row.bs.table',"#activity_table", function (e, row, $element) {
-          var details_data=createDetailsData(row); 
-          $("#details_table_modal").modal();
-          $("#date_day").html(row.date+"  "+row.day);
-          $('#details_table').bootstrapTable("load",details_data);   
-  });
-
-  function createDetailsData(row){
-          var details_data=[];
-          for (var i = 0; i < row.time.length; i++) {
-              details_data.push({
-                from:row.time[i].from,          
-                to:row.time[i].to,
-                single_time_total:row.time[i].single_time_total,
-                pro:row.pages[i].pro,
-                qc:row.pages[i].qc,
-                single_pages_total:row.pages[i].single_pages_total,
-                journal_id:row.journal_id[i]
-            }); 
-
-          } 
-      return details_data;           
-  }
-
-  function fillDropdown(){
-
-      var monthname_in_dropdown= month!=="" ? month : currentMonth;
-
-       $.each(monthNames, function (k, v) {
-            if (v === monthname_in_dropdown)  $('.month_name').html(k + " <span class='caret'></span>"); 
-        });
-        if((year!=="") &&  (year!==undefined)){ 
-
-            $('.year_name').html(year+" <span class='caret'></span>");
-        }else{
-            $('.year_name').html(currentYear+" <span class='caret'></span>");
-        } 
-       //month
-         var li_month="";
-         $.each(monthNames, function (k, v) {
-             li_month += "<li><a href='#'>"+ k +"</a></li>";
-         });
-        //year
-       var start = 2015;
-       var end = new Date().getFullYear();
-       var li_year = "";
-       for(var year = start ; year <=end; year++){
-           li_year += "<li><a href='#'>"+ year +"</a></li>";
-       }
-       $(".month_filter_li").html(li_month);
-       $(".year_filter_li").html(li_year); 
-}
-//ACTIVITY TABLE ENDS
-//
-//
-$('#table_admin').bootstrapTable({
-           
-            col: [
-                
-                    {
-                        field: 'state',
-                        checkbox: true,
-                        rowspan: 2,
-                        align: 'center',
-                        valign: 'middle'
-                    }, {
-                        title: 'Item ID',
-                        field: 'id',
-                        rowspan: 2,
-                        align: 'center',
-                        valign: 'middle',
-                        sortable: true,
-                       
-                    }, {
-                        title: 'Item Detail',
-                        colspan: 3,
-                        align: 'center'
-                    }
-                ]
-        });
 
 });  //end of main document.ready function

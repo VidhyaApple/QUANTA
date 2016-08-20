@@ -87,8 +87,7 @@ border: 1px solid white;
       transition: 0.1s;
     }
 
-   
-
+ 
 .customtable tbody tr:hover{
    background-color:#003380 !important;;
   }
