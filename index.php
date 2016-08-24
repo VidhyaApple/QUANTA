@@ -91,6 +91,8 @@ session_start();
 <!-- bootstrap timepicker -->
 <script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>
 
+<!-- underscrore js -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <!-- own js -->
 <script type="text/javascript" src="js/ht.js"></script>
 </body>

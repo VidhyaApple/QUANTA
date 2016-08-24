@@ -9,15 +9,9 @@
       </div>
     
   </div>
-<!--   <div class="well to_show_summary">    
-    <p style="text-align:center" class="month_year"></p>    
-      <p class="month_total_time"></p>
-      <p class="month_total_pages"></p>    
-  </div> -->
-    <table id="activity_table"
-           
-           data-classes="table table-hover customtable"
-           
+
+    <table id="activity_table"           
+           data-classes="table table-hover customtable"           
            data-show-toggle="true"
            data-show-columns="true"
            data-pagination="true"
@@ -72,7 +66,7 @@
                       <th data-field="to" data-align="center" data-title-tooltip="TO TIME WHEN WORK IS OVER">TO</th>
                       <th data-field="single_time_total" data-align="center" data-title-tooltip="TOTAL HOURS FOR THAT SESSION">TOTAL</th>
                       <th data-field="pro" data-align="center" data-title-tooltip="PRODUCTION PAGES">PRO</th>
-                      <th data-field="ac" data-align="center" data-title-tooltip="QUALITY CONTROL PAGES">QC</th>
+                      <th data-field="qc" data-align="center" data-title-tooltip="QUALITY CONTROL PAGES">QC</th>
                       <th data-field="single_pages_total" data-align="center" data-title-tooltip="TOTAL PAGES FOR THAT SESSION">TOTAL</th>   
                    </tr>
              </thead>                    

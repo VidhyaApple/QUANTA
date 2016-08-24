@@ -10,8 +10,6 @@ var currentDate=currentTime.getDate();
 var currentMonth=getCurrentMonth_in_number();
 var month="";
 var year="";
-
-var emp_row;
 var todayDate=currentMonth+"-"+currentDate+"-"+currentYear;
 var monthNames = {"JAN": "01","FEB": "02","MAR": "03","APR": "04","MAY": "05","JUN": "06","JUL": "07","AUG": "08","SEP": "09","OCT": "10","NOV": "11","DEC": "12"};  
 
@@ -100,8 +98,8 @@ function loadFile(file){
 
       $(".content-area").empty().html(contentdata).fadeIn();
       if(file==="entry.php")showTodayData();
-      if(file==="admin_view_activity.php")fillColumnsByDate(currentMonth,currentYear);
-      if(file==="view_activity.php")filterTable();
+      if((file==="admin_view_activity.php") || (file==="view_activity.php"))filterTable();
+      
    });
  
  }
@@ -130,6 +128,11 @@ function fade_alert_loadfile(alert_val,filename){
 function fade_alert(alert_val){
   $("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow");         
 }
+
+$(function(){
+    $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+  });
+
 //COMMON FUNCTIONS TO BE CALLED - END
 //
 //
@@ -192,8 +195,12 @@ $(document).on('submit', '.form_login_signup', function(){
     
     $.post('ajax_response.php', $(this).serialize())
     .done(function(data){
-      var jsondata=$.parseJSON(data);
+      
             if(data=="inserted"){ 
+                  checkSession(function(output){ 
+                      outputs=output.split(",");    
+                      hideMenu();
+                  });
                 $(".panel-group").fadeOut('slow', function(){   
                 fade_alert_loadfile('Signed up Successfully!',"entry.php"); });        
 
@@ -211,13 +218,11 @@ $(document).on('submit', '.form_login_signup', function(){
             }else if(data=="loggedin_dont_match"){
                 $("#em_pwd_error").removeClass("hide");
 
-            }else if((typeof jsondata)==="object"){
-              
+            }else if(data=="admin_loggedin"){
                 checkSession(function(output){ 
                     outputs=output.split(",");    
                     hideMenu();
-                 });
-                emp_row=jsondata;   
+                 });  
                 $(".panel-group").fadeOut('slow', function(){    
                 //location.reload();                             
                 fade_alert_loadfile("Logged in successfully","admin_view_activity.php"); 
@@ -245,7 +250,7 @@ $(document).on('submit', '.form_entry', function(){
               .done(function(data){            
                     if(data=="record_inserted"){  
                           fade_alert_loadfile("Saved successfully","entry.php");
-                    }else{       
+                    }else{                       
                           fade_alert("ERROR IN SUBMITTING RECORDS!");
                     }
 
@@ -335,28 +340,32 @@ function filterTable(){
       fillDropdown(month,year);
       if(outputs[1]!=="admin"){
 
-            $.getJSON('ajax_response.php',{user:"user",month:month,year:year}).done(function(data){        
-                    
-                    $('#activity_table').bootstrapTable("destroy").bootstrapTable({height:getHeight()}).bootstrapTable('load',data);
-                    $('#details_table').bootstrapTable("destroy").bootstrapTable();
-                    
-              
+            $.getJSON('ajax_response.php',{user:"user",month:month,year:year}).done(function(data){               
+                    $('#activity_table').bootstrapTable("destroy").bootstrapTable({data:data,height:getHeight()});
+                    $("#activity_table tr").attr({"title":"CLICK TO SEE DETAILS","data-container":"body","data-toggle":"tooltip","data-placement":"bottom"});
             }).fail(function(){                  
                   fade_alert("ERROR IN LOADING EMPLOYEES RECORDS");
             });          
          
 
        }else{
-            if(outputs[1]==="admin"){
-                
-                $.getJSON('ajax_response.php',{user:"admin",month:month,year:year}).done(function(data){
-                      $('#table_admin').bootstrapTable('load',data);
-
+            if(outputs[1]==="admin"){                
+                $.getJSON('ajax_response.php',{user:"admin",month:month,year:year}).done(function(data){             
+                      $('#table_admin').bootstrapTable("destroy").bootstrapTable({
+                        data:adminDataProcess(data),
+                        columns:fillColumnsByDate(month,year),
+                        height:getHeight()
+                      });
+                      $("#table_admin td").attr({"title":"DOUBLE CLICK TO SEE DETAILS","data-container":"body","data-toggle":"tooltip","data-placement":"bottom"});
+                      $("#table_admin td:nth-child(8n+1),td:last-child").css("background-color","#E17149");
                 }).fail(function(){                  
                   fade_alert("ERROR IN LOADING EMPLOYEES RECORDS");
                 });
+
+
             }
        }
+       
   } 
 
 function showTodayData(){
@@ -373,11 +382,11 @@ function showTodayData(){
 }
 
 
-  $(document).on('click-row.bs.table',"#activity_table", function (e, row, $element) {
-          var details_data=createDetailsData(row); 
+  $(document).on('click-row.bs.table',"#activity_table", function (e, row, $element) {          
           $("#details_table_modal").modal();
           $("#date_day").html(row.date+"  "+row.day);
-          $('#details_table').bootstrapTable("load",details_data);   
+          $('#details_table').bootstrapTable("destroy").bootstrapTable({data:createDetailsData(row)});
+           
   });
 
   function createDetailsData(row){
@@ -406,8 +415,7 @@ function showTodayData(){
         });
 
        var year_in_dropdown= year!=="" ? year : currentYear;        
-      $('.year_name').html(year_in_dropdown+" <span class='caret'></span>");
-      
+      $('.year_name').html(year_in_dropdown+" <span class='caret'></span>");      
         
        //month
          var li_month="";
@@ -430,8 +438,70 @@ function showTodayData(){
 //////ADMIN TABLE 
 //
 //
-function getDaysInMonth(admonth, adyear) {
-     admonth=parseInt(admonth, 10);
+
+function adminDataProcess(data){
+ var date;
+ var ProcessedData=[];
+ var ChangingData=_.groupBy(data,"user_id");
+  $.each(ChangingData, function (k, v) {
+     var concat=[]; 
+      ChangingData[k]=_.map(v, function(vk) {     
+        date=(vk.date).split("-");
+        vk["pgs_hrs_"+date[0]]=vk.total_pages+" -- "+(vk.total_time).slice(0,-4);        
+        vk["date_"+date[0]] =vk.date;
+        vk["day_"+date[0]] =vk.day;
+        vk["pages_"+date[0]] =vk.pages;
+        vk["time_"+date[0]] =vk.time;
+        vk["journal_id_"+date[0]] =vk.journal_id;                
+        vk=  _.omit(vk, ['total_time','total_pages','date','day','pages','time','journal_id']);
+        Object.assign(concat,vk);
+        
+      }); 
+      
+      ChangingData[k]=concat;
+      ProcessedData.push(_.extend({}, ChangingData[k]));
+  });
+  return ProcessedData;
+}
+
+ $(document).on('dbl-click-cell.bs.table',"#table_admin", function (field, value, row, element) {
+           $(".success").removeClass("success");          
+           $("[aria-describedby^='tooltip']").addClass("success");
+           if(row===undefined){
+                alert("No record!");
+           }else{         
+               $("#details_table_admin_modal").modal();
+               var id=value.split("_");
+                id=id[(id.length)-1];            
+               $("#date_day_name").html(element["date_"+id]+"  ("+element["day_"+id]+")<br><b>"+element.Name+"</b>");
+               $('#details_table_admin').bootstrapTable("destroy").bootstrapTable(
+                {data:createDetailsData_admin(element,id),
+                  columns:fillColumn_detailsdata_admin(id)
+                });   
+           }        
+  }); 
+
+  function createDetailsData_admin(element,id){
+          var details_data=[];
+          
+          for (var i = 0; i < element["time_"+id].length; i++) {
+              details_data.push({
+                from:element["time_"+id][i].from,          
+                to:element["time_"+id][i].to,
+                single_time_total:element["time_"+id][i].single_time_total,
+                pro:element["pages_"+id][i].pro,
+                qc:element["pages_"+id][i].qc,
+                single_pages_total:element["pages_"+id][i].single_pages_total,
+                journal_id:element["journal_id_"+id][i]
+            }); 
+
+          } 
+      return details_data;           
+  }
+  function getDaysInMonth(admonth, adyear) {
+  
+     admonth=(parseInt(admonth-1, 10));
+    
      var date = new Date(adyear, admonth, 1);
      var days = [];
      while (date.getMonth() === admonth) {
@@ -441,117 +511,109 @@ function getDaysInMonth(admonth, adyear) {
 
      return days;
 }
-
 function fillColumnsByDate(admonth,adyear){
     
     var calendar=getDaysInMonth(admonth, adyear);
     var week=0;
+    var oneday;
     var to_fill_column=[[{
                           "title":"EMPLOYEES",
-                          "field":"emp",
-                           "rowspan":2
-                           
+                          "field":"Name",
+                          "rowspan":2                           
                         }],[]];
    
     for(var i=0;i<calendar.length;i++){
-        var oneday=calendar[i].toString().split(" ");
+        oneday=calendar[i].toString().split(" ");       
         if(((i+1)%7)===0){
             week=week+1;
             to_fill_column[0].push(                     
                         {
-                          "title":oneday[2]+"<br>"+oneday[0],
-                          "field":oneday[2],
-                           "rowspan":1,
-                                                                             
+                          "title":oneday[2]+"-"+oneday[1]+"<br>"+oneday[0],                          
+                           "rowspan":1,                                                                
                            "align":"center"                         
                         },
                         {
-                          "title":"WEEK- "+week+"<br>TOTAL",
-                          "field":"week",
+                          "title":"WEEK- "+week+"<br>TOTAL",                          
                           "rowspan":1,
-                          "align":"center"             
-                                             
-                        }                          
-                );
+                          "align":"center"                                              
+                        });                          
+                
         to_fill_column[1].push(                     
                         {
-                          "title":"PGS---HRS",
-                          "field":"pgs"             
-                                             
+                          "title":"PGS -- HRS",
+                          "field":"pgs_hrs_"+oneday[2]         
                         },
                         {
-                          "title":"PGS---HRS",
-                          "field":"pgs"             
-                                             
-                        }                          
-                );         
+                          "title":"PGS -- HRS",
+                          "field":"week_total"
+                        });                         
 
-
-
-        }else{  
+        }
+        else{  
         to_fill_column[0].push(                     
                         {
-                          "title":oneday[2]+"<br>"+oneday[0],
-                          "field":oneday[2],
-                           "rowspan":1,
-                                                                             
-                           "align":"center"                         
-                        }                        
-                );
+                          "title":oneday[2]+"-"+oneday[1]+"<br>"+oneday[0],                          
+                          "rowspan":1,                                                                 
+                          "align":"center"                         
+                        });                        
+                
         to_fill_column[1].push(                     
                         {
-                          "title":"PGS---HRS",
-                          "field":"pgs"             
-                                             
-                        }                        
-                );
+                          "title":"PGS -- HRS",
+                          "field":"pgs_hrs_"+oneday[2]
+                        });      
 
-        }                 
+        }
+
     }
+    
     to_fill_column[0].push(                     
                         {
-                          "title":"MONTH<br>TOTAL",
-                          "field":"month_total",
-                           "rowspan":1,                                                                             
-                           "align":"center"                         
-                        }                        
-                );
-        to_fill_column[1].push(                     
+                          "title":oneday[1]+"<br>MONTH TOTAL",                         
+                          "rowspan":1,
+                          "align":"center"
+                        });  
+    to_fill_column[1].push(                     
                         {
-                          "title":"PGS---HRS",
-                          "field":"total_pages"             
-                                             
-                        });
-                                          
-  
-    $('#table_admin').bootstrapTable({           
-            columns:to_fill_column,          
-            height:getHeight()
-    });
-    filterTable();   
+                          "title":"PGS -- HRS",
+                          "field":"month_total"
+                        });                                   
+   return to_fill_column;
+       
 }
- $(document).on('click-row.bs.table',"#table_admin", function (e, row, $element) {
-          var details_data=createDetailsData_admin(row); 
-          $("#details_table_admin_modal").modal();
-          $("#date_day").html(row.date+"  "+row.day);
-          $('#details_table_admin').bootstrapTable("load",details_data);   
-  });
 
-  function createDetailsData_admin(row){
-          var details_data=[];
-          for (var i = 0; i < row.time.length; i++) {
-              details_data.push({
-                from:row.time[i].from,          
-                to:row.time[i].to,
-                single_time_total:row.time[i].single_time_total,
-                pro:row.pages[i].pro,
-                qc:row.pages[i].qc,
-                single_pages_total:row.pages[i].single_pages_total,
-                journal_id:row.journal_id[i]
-            }); 
+  function fillColumn_detailsdata_admin(id){    
+    var col=[[
+              {
+                title:"TIME",
+                align:"center",
+                colspan:3
+              },{
+                title:"PAGES",
+                align:"center",
+                colspan:3
+              },{
+                title:"JOURNAL/BOOK ID",
+                align:"center",
+                rowspan:2,
+                field:"journal_id_"+id
+              }
 
-          } 
-      return details_data;           
+              ],[
+              {
+                field:"from",
+                align:"center"
+              },{field:"to",
+                align:"center"
+              },{field:"single_time_total",
+                align:"center"
+              },{field:"pro",
+                align:"center"
+              },{field:"qc",
+                align:"center"
+              },{field:"single_pages_total",
+                align:"center"}
+              ]];
   }
 
 //basic functions for admin table
@@ -560,10 +622,13 @@ function getHeight() {
 return $('nav.navbar-fixed-bottom').is(':visible')?$(window).height() - $(".content-area").outerHeight(true)-150 :$(window).height() - $(".content-area").outerHeight(true)-100;
 }
 
-$("#table_admin td").attr({"title":"DOUBLE CLICK TO SEE DETAILS","data-container":"body","data-toggle":"tooltip","data-placement":"bottom"});
-$(function(){
-    $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-  });
+$(window).resize(function () {
+        $('#activity_table').bootstrapTable('resetView');
+        $('#details_table').bootstrapTable('resetView');
+        $('#table_admin').bootstrapTable('resetView');
+        $('#details_table_admin').bootstrapTable('resetView');
+        
+    });
 
 
 //TIMEPICKER

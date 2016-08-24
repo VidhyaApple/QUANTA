@@ -2,12 +2,8 @@
 error_reporting(E_ALL & ~E_NOTICE);
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	require_once("submit.php");
-	$crud=new ht_crud("ht_users","ht_record");
-	if(gettype($crud->crud_result())==="array"){
-		echo json_encode($crud->crud_result());
-	}else{
-		echo $crud->crud_result();
-	}
+	$crud=new ht_crud("ht_users","ht_record");	
+	echo $crud->crud_result();	
 	
 }else{
 	require_once("calculate_records.php");

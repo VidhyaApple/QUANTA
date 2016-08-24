@@ -24,12 +24,12 @@ class Record_Read
    public function getData($who,$mon,$year){
    	    
    		$todayDate=date("d-m-Y l");
- 		if($who==="user"){
- 			$query= "SELECT * FROM `$this->table` where `user_id`='$this->user_id' and `date` like '%$mon-$year%'";
+ 		if($who==="user"){ 			
+ 			$query= "SELECT * FROM $this->table where user_id=$this->user_id and date like '%$mon-$year%'";
  		}elseif($who==="today"){
- 			$query= "SELECT * FROM `$this->table` where `date`= '$todayDate' and `user_id`='$this->user_id'";
+ 			$query= "SELECT * FROM $this->table where date= '$todayDate' and user_id =$this->user_id";
 	    }else{
-	    	$query= "SELECT * FROM `$this->table` where `date` like '%$mon-$year%'";
+	    	$query= "SELECT r.date,r.user_id,r.journal_id,r.time,r.pro_pages,r.qc_pages,u.Name from $this->table r join ht_users u on u.user_id=r.user_id where date like \"%$mon-$year%\"";
 	    }	
 		$read=$this->new_conn->conn->query($query);
 		 
@@ -41,7 +41,7 @@ class Record_Read
 		 }else{
 		 		$raw_output=NULL;
 		 }
-		 print_r($row_output);
+		
 		 return $this->processData($raw_output);
 		}
 	
@@ -53,7 +53,7 @@ class Record_Read
 		   
 		        foreach ($data[$totalRecord] as $key => $value) {
 
-		        	if($key!=="date"){
+		        	if(($key!=="date") && ($key!=="user_id") && ($key!=="Name")){
 		        		$explodedData=explode(" ; ",$value);
 		        	}
 		        	//date
@@ -65,7 +65,14 @@ class Record_Read
 		        	
 		             elseif($key==="journal_id"){			            
 			            $returnUserData[$totalRecord]["journal_id"]=$explodedData;
-			         }   	
+			         }
+			         elseif($key==="user_id"){			            
+			            $returnUserData[$totalRecord]["user_id"]=$value;
+			         } 
+
+			         elseif($key==="Name"){			            
+			            $returnUserData[$totalRecord]["Name"]=$value;
+			         }     	
 
             	 	elseif($key==="time"){
             	 		$timeData=array();
@@ -92,7 +99,8 @@ class Record_Read
 	            	 		$total_pages=$pro_pages+$qc_pages;
 	            	 		$returnUserData[$totalRecord]["total_pages"]=$total_pages;
 	            	 	    $pro_pages=$qc_pages=$total_pages=0;
-            	 	}}
+            	 		}
+            	 	}
           			if($qc_explodedData!==""){
           				$pagesData=array();
           				for($i=0;$i<count($qc_explodedData);$i++){
@@ -157,7 +165,5 @@ class Record_Read
 
 
 }	
-//$record=new Record_Read();
-//echo json_encode($record->getData("user","08","2016"));
 
 ?>

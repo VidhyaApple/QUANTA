@@ -1,61 +1,61 @@
-/*Theme the table*/
-
-
-    /*Theme the header*/
-    .customtable2 thead th, .to_show_summary {
-      background-color:#003380;
-      color:#fff;
-      font-weight: bold;
-      text-shadow: 2px 2px  5px black;
-    }
-
-    /*Theme the rows*/
-    .customtable2 tbody tr{
-      color:#fff;
-      font-weight: bold;
-      background-color:#85a3e0;
-      border-top: 1px solid #333;
-      text-shadow: 2px 2px  3px black;
-      cursor:pointer;
-      transition: 0.1s;
-    }
-
-   
-
-.customtable2 tbody tr td:hover{
-   background-color:#003380 !important;
-  }
-
-.fixed-table-header-columns,
-.fixed-table-body-columns {
-    position: absolute;    
-    display: none;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-.fixed-table-header-columns .table,
-.fixed-table-body-columns .table {
-    border-right: 1px solid #ddd;
-
-}
-
-.fixed-table-header-columns .table.table-no-bordered,
-.fixed-table-body-columns .table.table-no-bordered {
-    border-right: 1px solid transparent;
-
-}
-
-.fixed-table-body-columns table {
-    position: absolute;
-    animation: none;
-
-}
-.fixed-table-body-columns td{   
-    background-color:#003380 !important;
-}
-
-
-/*.bootstrap-table .table-hover > tbody > tr.hover > td{
-    background-color: #f5f5f5;
-}*/
+      /*Theme the table*/
+      
+      
+      /*Theme the header*/
+      .customtable2 thead th, .to_show_summary {
+      background-color         :#003380;
+      color                    :#fff;
+      font-weight              : bold;
+      text-shadow              : 2px 2px  5px black;
+      }
+      
+      /*Theme the rows*/
+      .customtable2 tbody tr{
+      color                    :#fff;
+      font-weight              : bold;
+      background-color         :#85a3e0;
+      border-top               : 1px solid #333;
+      text-shadow              : 2px 2px  3px black;
+      cursor                   :pointer;
+      transition               : 0.1s;
+      }
+      
+      
+      
+      .customtable2 tbody tr td:hover{
+      background-color         :#003380 !important;
+      }
+      
+      .fixed-table-header-columns,
+      .fixed-table-body-columns {
+      position                 : absolute;    
+      display                  : none;
+      box-sizing               : border-box;
+      overflow                 : hidden;
+      }
+      
+      .fixed-table-header-columns .table,
+      .fixed-table-body-columns .table {
+      border-right             : 1px solid #ddd;
+      
+      }
+      
+      .fixed-table-header-columns .table.table-no-bordered,
+      .fixed-table-body-columns .table.table-no-bordered {
+      border-right             : 1px solid transparent;
+      
+      }
+      
+      .fixed-table-body-columns table {
+      position                 : absolute;
+      animation                : none;
+      
+      }
+      .fixed-table-body-columns td{   
+      background-color         :#003380 !important;
+      }
+      
+      
+      /*.bootstrap-table .table-hover > tbody > tr.hover > td{
+      background-color         : #f5f5f5;
+      }*/

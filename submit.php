@@ -3,7 +3,7 @@ session_start();
 require_once("db.php");
 error_reporting(E_ALL & ~E_NOTICE);
 /**
-* crud operations ->construct -> one parameter- mysql table name
+* crud operations ->construct -> two parameter- mysql table user , mysql table record
 * functions:
 * 1. test_input->one parameter
 * 2.ht_insert->four parameter
@@ -31,12 +31,11 @@ class ht_crud
   				// 
   				// 
   				if($login_email==="quads_admin"){
-  					if($login_email===$login_password){
-  						$row=$this->ht_read_name_id();
-  						$this->result=$row;
+  					if($login_email===$login_password){  						
   						$_SESSION["email"]="admin";
              			$_SESSION["name"]="ADMIN";
              			$_SESSION["user_id"]="admin";
+             			$this->result="admin_loggedin";
   					}else{
   						$this->result="loggedin_dont_match";
   					}  				
@@ -121,12 +120,12 @@ class ht_crud
 	     
 	}
 
-	public function ht_check_email_date($table,$str,$email_val){
+	public function ht_check_email_date($str,$email_val){
 		   if($email_val){
-		    $check_read_sql="SELECT `Email` FROM `$table` where `Email`='$str'";
+		    $check_read_sql="SELECT `Email` FROM `$this->table_user` where `Email`='$str'";
 		   }else{
 		   	$user_id=$_SESSION["user_id"];
-		   	$check_read_sql="SELECT `date` FROM `$table` where `date`='$str' AND `user_id`='$user_id'";
+		   	$check_read_sql="SELECT `date` FROM `$this->table_record` where `date`='$str' AND `user_id`='$user_id'";
 		   }
 		    $check_read=$this->new_conn->conn->query($check_read_sql);   
 		    return $check_read->num_rows > 0 ? false : true ;
@@ -148,18 +147,18 @@ class ht_crud
 			
 	}
 
-	public function ht_read_name_id(){
+	// public function ht_read_name_id(){
 		
-		$read_sql="SELECT `user_id`,`Name` FROM `$this->table_user`";
-		$read=$this->new_conn->conn->query($read_sql); 
-		if ($read->num_rows > 0) {
-		    	$row=$read->fetch_all(MYSQLI_ASSOC);		    	
-		    	return $row;
-		}else{
-			return "NO EMPLOYEES";
-		} 
+	// 	$read_sql="SELECT `user_id`,`Name` FROM `$this->table_user`";
+	// 	$read=$this->new_conn->conn->query($read_sql); 
+	// 	if ($read->num_rows > 0) {
+	// 	    	$row=$read->fetch_all(MYSQLI_ASSOC);		    	
+	// 	    	return $row;
+	// 	}else{
+	// 		return "NO EMPLOYEES";
+	// 	} 
 		
-	}
+	// }
 
 	public function check_empty($str){
 		return $str==="" ? "-" : $str;
