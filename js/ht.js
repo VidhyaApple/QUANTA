@@ -46,14 +46,14 @@ showPaddingBottomMobileView();
 
 //HIDE FOOTER WHEN INPUT BOX IS ON FOCUS
 $(document).on('focus', 'input', function() {
-     $("nav.navbar-fixed-bottom").removeClass("visible-xs").addClass("hidden-xs hidden-md hidden-lg");
+     $("nav.navbar-fixed-bottom").removeClass("visible-xs").addClass("hidden");
     showPaddingBottomMobileView();
     
 });
 
 //SHOW FOOTER WHEN INPUT IS NOT ON FOCUS
 $(document).on('blur', 'input', function() {     
-    $("nav.navbar-fixed-bottom").removeClass("hidden-xs hidden-md hidden-lg").addClass("visible-xs");
+    $("nav.navbar-fixed-bottom").removeClass("hidden").addClass("visible-xs");
     showPaddingBottomMobileView();   
  
 });
@@ -110,7 +110,7 @@ checkSession(function(output){
   if(outputs[0]==="user_session"){
       loadFile("entry.php");
   }else if(outputs[0]==="admin_session"){
-      $("nav.navbar-fixed-bottom").removeClass("visible-xs").addClass("hidden-xs hidden-md hidden-lg");
+      $("nav.navbar-fixed-bottom").removeClass("visible-xs").addClass("hidden");
       showPaddingBottomMobileView();     
       loadFile("admin_view_activity.php");
 
@@ -121,12 +121,12 @@ checkSession(function(output){
              
 
 function fade_alert_loadfile(alert_val,filename){
-  $("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow",function(){ 
+  $("<div class='alert fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow",function(){ 
      loadFile(filename);});         
 }
 
 function fade_alert(alert_val){
-  $("<div class='alert alert-danger col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-6 fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow");         
+  $("<div class='alert fade in alert-fixed'>"+alert_val+"</div>").appendTo(".content-area").delay(1000).fadeOut("slow");         
 }
 
 $(function(){
@@ -407,7 +407,6 @@ function showTodayData(){
   }
 
   function fillDropdown(month,year){
-
       var monthname_in_dropdown= month!=="" ? month : currentMonth;
 
        $.each(monthNames, function (k, v) {
@@ -444,31 +443,92 @@ function adminDataProcess(data){
  var ProcessedData=[];
  var ChangingData=_.groupBy(data,"user_id");
   $.each(ChangingData, function (k, v) {
-     var concat=[]; 
-      ChangingData[k]=_.map(v, function(vk) {     
+  var concat=[];     
+      ChangingData[k]=_.map(v, function(vk) {
         date=(vk.date).split("-");
         vk["pgs_hrs_"+date[0]]=vk.total_pages+" -- "+(vk.total_time).slice(0,-4);        
         vk["date_"+date[0]] =vk.date;
         vk["day_"+date[0]] =vk.day;
         vk["pages_"+date[0]] =vk.pages;
         vk["time_"+date[0]] =vk.time;
-        vk["journal_id_"+date[0]] =vk.journal_id;                
+        vk["journal_id_"+date[0]] =vk.journal_id;        
         vk=  _.omit(vk, ['total_time','total_pages','date','day','pages','time','journal_id']);
         Object.assign(concat,vk);
         
-      }); 
+      });
+          
+         var week_1=0;
+         var week_2=0; 
+         var week_3=0; 
+         var week_4=0;
+         var month_pages=0;
+         var week_1_array=[];
+         var week_2_array=[];
+         var week_3_array=[];
+         var week_4_array=[];
+         var month_pages_array=[];
+           
+      for(var key in concat){             
+        if((key.indexOf("pgs_hrs_"))!==-1){
+              var date=key.split("_");              
+              var pg_hr=concat[key].split(" -- ");
+              var page=parseInt(pg_hr[0]);
+                if(date[2]<=07){
+                  week_1=parseInt(week_1)+page;
+                  week_1_array.push(pg_hr[1]);
+                }else if(date[2]<=14){          
+                  week_2=parseInt(week_2)+page;
+                  week_2_array.push(pg_hr[1]);
+                }else if(date[2]<=21){          
+                  week_3=parseInt(week_3)+page;
+                  week_3_array.push(pg_hr[1]);
+                }else if(date[2]<=28){          
+                  week_4=parseInt(week_4)+page;
+                  week_4_array.push(pg_hr[1]);         
+                }
+              //month 
+              month_pages=parseInt(month_pages)+page;
+              month_pages_array.push(pg_hr[1]); 
+          }
+         }  
+        concat.week_1=week_1+" -- "+sumUpTime(week_1_array);
+        concat.week_2=week_2+" -- "+sumUpTime(week_2_array);
+        concat.week_3=week_3+" -- "+sumUpTime(week_3_array); 
+        concat.week_4=week_4+" -- "+sumUpTime(week_4_array);
+        concat.month_total=month_pages+" -- "+sumUpTime(month_pages_array);                        
       
-      ChangingData[k]=concat;
+      ChangingData[k]=concat;      
       ProcessedData.push(_.extend({}, ChangingData[k]));
-  });
+  });  
   return ProcessedData;
 }
+
+function sumUpTime(times){
+  
+  var minutes=0;
+  for (var i = 0; i < times.length; i++) {
+    //var time=times[i].replace(" hrs","");
+    var time=times[i];
+    var splitted=time.split(":");
+    minutes =minutes + Number(splitted[0] * 60) + Number(splitted[1]);    
+  }  
+  
+  var hours = Math.floor(minutes/60);
+  minutes -= hours * 60; 
+  hours=hours.toString().length >=2 ? hours : "0"+hours;
+  minutes=minutes.toString().length===2 ? minutes : "0"+minutes;
+  return hours+":"+minutes;
+}
+
 
  $(document).on('dbl-click-cell.bs.table',"#table_admin", function (field, value, row, element) {
            $(".success").removeClass("success");          
            $("[aria-describedby^='tooltip']").addClass("success");
+           
            if(row===undefined){
                 alert("No record!");
+           }else if(((value.indexOf("week_"))!==-1) || ((value.indexOf("month_"))!==-1)){
+               alert("Please see the details of daily progress!");                 
            }else{         
                $("#details_table_admin_modal").modal();
                var id=value.split("_");
@@ -545,7 +605,7 @@ function fillColumnsByDate(admonth,adyear){
                         },
                         {
                           "title":"PGS -- HRS",
-                          "field":"week_total"
+                          "field":"week_"+week
                         });                         
 
         }
@@ -619,7 +679,7 @@ function fillColumnsByDate(admonth,adyear){
 //basic functions for admin table
 
 function getHeight() {
-return $('nav.navbar-fixed-bottom').is(':visible')?$(window).height() - $(".content-area").outerHeight(true)-150 :$(window).height() - $(".content-area").outerHeight(true)-100;
+return $('nav.navbar-fixed-bottom').is(':visible')?$(window).height() - $(".content-area").outerHeight(true)-150 :$(window).height() - $(".content-area").outerHeight(true)-60;
 }
 
 $(window).resize(function () {

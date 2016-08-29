@@ -8,16 +8,12 @@
             <button class="btn btn-primary dropdown-toggle year_name" title="YEAR FILTER" data-toggle="dropdown" ></button>
             <ul class="dropdown-menu year_filter_li"></ul>   
       </div> 
-
-<div class="export btn-group"><button class="btn dropdown-toggle" title="EXPORT DATA" data-toggle="dropdown" type="button"><i class="glyphicon glyphicon-export icon-share"></i> <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li data-type="json"><a href="javascript:void(0)">JSON</a></li><li data-type="xml"><a href="javascript:void(0)">XML</a></li><li data-type="csv"><a href="javascript:void(0)">CSV</a></li><li data-type="txt"><a href="javascript:void(0)">TXT</a></li><li data-type="sql"><a href="javascript:void(0)">SQL</a></li><li data-type="excel"><a href="javascript:void(0)">MS-Excel</a></li></ul></div>
-
-
-
-  
+ 
    </div>     
         <table id="table_admin"
            data-toolbar="#toolbar_admin"                  
            data-fixed-columns="true"
+           data-show-export="true"
            data-fixed-number=1
            data-classes="table customtable2"                         
            data-pagination="true"          

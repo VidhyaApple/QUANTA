@@ -32,7 +32,7 @@ session_start();
             </div>  
 
             <div>
-                <ul class="nav navbar-nav navbar-right visible-md visible-lg">
+                <ul class="nav navbar-nav navbar-right hidden-xs">
                     <li><a href="#" class="home_nav"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                     <li class="tohide"><a href="#" class="viewactivity_nav"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
                     <li><a href="#" class="logout_nav"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
@@ -40,7 +40,7 @@ session_start();
             </div>
 
             <div class="collapse navbar-collapse" id="navbar_collapse" >
-                <ul class="nav navbar-nav navbar-right visible-xs visible-sm">
+                <ul class="nav navbar-nav navbar-right visible-xs">
                     <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="home_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                     <li data-toggle="collapse" data-target="#navbar_collapse" class="tohide"><a href="#" class="viewactivity_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-eye-open"></span> View Activity</a></li>
                     <li data-toggle="collapse" data-target="#navbar_collapse"><a href="#" class="logout_nav" style="font-size:1.4em"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
