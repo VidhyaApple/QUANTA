@@ -61,8 +61,12 @@ $(document).on('blur', 'input', function() {
 //if admin logged in then hide view activity menu
 function hideMenu(){
   if(outputs[1]==="admin"){
+        $("nav.navbar-fixed-bottom").removeClass("visible-xs").addClass("hidden");
+        showPaddingBottomMobileView();
        $(".tohide").hide();
-    }else{     
+    }else{
+        $("nav.navbar-fixed-bottom").removeClass("hidden").addClass("visible-xs");
+        showPaddingBottomMobileView();     
        $(".tohide").show();      
     }
 }
@@ -519,7 +523,10 @@ function sumUpTime(times){
   minutes=minutes.toString().length===2 ? minutes : "0"+minutes;
   return hours+":"+minutes;
 }
-
+$(document).on('page-change.bs.table',"#table_admin", function (data) {
+$("#table_admin td").attr({"title":"DOUBLE CLICK TO SEE DETAILS","data-container":"body","data-toggle":"tooltip","data-placement":"bottom"});
+                      $("#table_admin td:nth-child(8n+1),td:last-child").css("background-color","#E17149");
+});
 
  $(document).on('dbl-click-cell.bs.table',"#table_admin", function (field, value, row, element) {
            $(".success").removeClass("success");          

@@ -13,10 +13,10 @@ session_start();
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
-    <link rel="stylesheet" href="css/rawgit_fixed_column.css">
+    <link rel="stylesheet" href="css/rawgit_fixed_column.min.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-timepicker.min.css">
 
-    <link rel="stylesheet" type="text/css" href="css/ht.css">
+    <link rel="stylesheet" type="text/css" href="css/ht.min.css">
     <style></style>
 </head>
 <body>

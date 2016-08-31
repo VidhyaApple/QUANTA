@@ -83,8 +83,14 @@ img {
                  </thead>
                  <tbody>
                       <tr>
-                            <td>VERSION 1.2 (LATEST August 2016)<br>(Bugs fixed and Reminder feature added)</td>
+                            <td>VERSION 1.3 (LATEST August 2016)<br>(Bugs fixed)</td>
                             <td><a href="download.php" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
+                            
+                            
+                      </tr>
+                      <tr>
+                            <td>VERSION 1.2 (August 2016)<br>(Bugs fixed and Reminder feature added)</td>
+                            <td><a href="#" onclick="alert('Please download latest version!');" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
                             
                             
                       </tr>
