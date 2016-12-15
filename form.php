@@ -1,0 +1,95 @@
+<div class="panel-group col-md-offset-3 col-md-6 col-lg-offset-3 col-lg-6" id="panel_accordian">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+              <div class="panel-title text-center">
+                <a href="#panel_collapse_signup" data-toggle="collapse" data-parent="#panel_accordian" class="accordion-toggle"><span class="glyphicon glyphicon-user"></span> SIGN UP</a>   
+              </div>
+          </div>
+          <div id="panel_collapse_signup" class="panel-collapse collapse">
+            <div class="panel-body">
+               
+            	<form class="form-horizontal form_login_signup" role="form">
+            	<span class="text-danger hide" id="em_error"><h3>Email Id already exists! Please login to continue</h3></span>		
+
+            		<div class="form-group">            
+            			<div class="col-md-12 col-lg-12">
+	                		<input type="text" class="form-control input-lg transparent-input" name="fullname" id="name" placeholder="Full Name" required>
+	                		
+            			</div>
+        			</div>
+
+        			<div class="form-group"> 
+
+            			<div class="col-md-12 col-lg-12">
+	                		<input type="text" class="form-control input-lg transparent-input" name="email" id="email" placeholder="Email Address" required>
+	                		
+            			</div>
+        			</div>
+        
+        			<div class="form-group">            
+            			<div class="col-md-12 col-lg-12">
+			                <input type="password" class="form-control input-lg transparent-input" name="pwd" id="pwd" placeholder="Enter Password" required>
+			          </div>
+       				 </div>
+
+       				<div class="form-group has-feedback" id="confirm_password">          
+           				<div class="col-md-12 col-lg-12">
+			                <input type="password" class="form-control input-lg transparent-input" id="pwd2" placeholder="Confirm Password" required>
+			                <span class="glyphicon form-control-feedback"></span>
+			                
+            			</div>
+        			</div>
+
+        			<div class="form-group">
+                		<div class="col-xs-6 col-lg-6 col-sm-6 col-lg-6">
+                    		<button type="submit" class="btn btn-info btn-block btn-lg  transparent-input" id="form_submit" ><span class="glyphicon glyphicon-user"></span> Sign Up</button>
+                 		</div> 
+                 		<div class="col-xs-6 col-lg-6 col-sm-6 col-lg-6">
+                    		<button type="reset" class="btn btn-info btn-block btn-lg transparent-input" onclick="reset();"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                 		</div>                 		                		                  
+        			</div> 
+      			</form>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="panel panel-primary">
+          <div class="panel-heading text-center">
+              <div class="panel-title">
+                <a href="#panel_collapse_login" data-toggle="collapse" data-parent="#panel_accordian" class="accordion-toggle"><span class="glyphicon glyphicon-log-in"></span> LOG IN</a>          
+              </div>
+          </div>
+          <div id="panel_collapse_login" class="panel-collapse collapse">
+            <div class="panel-body">
+               
+            	<form class="form-horizontal form_login_signup" role="form" >
+            	   <span class="text-danger hide" id="em_pwd_error"><h3>Please enter valid Email Id and Password</h3></span>	
+        			<div class="form-group">            
+            			<div class="col-md-12 col-lg-12">
+	                		<input type="text" class="form-control input-lg transparent-input" name="email_login" placeholder="Enter Email Address" required>
+	                		
+            			</div>
+        			</div>
+        
+        			<div class="form-group">            
+            			<div class="col-md-12 col-lg-12">
+			                <input type="Password" class="form-control input-lg transparent-input" name="pwd_login" placeholder="Enter Password" required>
+			                
+            			</div>
+       				 </div>
+       				
+        			<div class="form-group">
+                		<div class="col-xs-6 col-lg-6 col-sm-6 col-lg-6">
+                    		<button type="submit" class="btn btn-info btn-block btn-lg transparent-input"><span class="glyphicon glyphicon-log-in"></span> Log in</button>
+                 		</div> 
+                 		<div class="col-xs-6 col-lg-6 col-sm-6 col-lg-6">
+                    		<button type="reset" class="btn btn-info btn-block btn-lg transparent-input" onclick="reset();"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                 		</div>                 		                 
+        			</div> 
+      			</form>
+            </div>
+            
+          </div>
+        </div>
+      </div>
