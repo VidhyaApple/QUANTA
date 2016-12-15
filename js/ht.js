@@ -234,7 +234,11 @@ $(document).on('submit', '.form_login_signup', function(){
                 }); 
                 
             }else{
+<<<<<<< HEAD
                 
+=======
+              
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
                 fade_alert("FAILED TO SUBMIT DATA!");
             }
 
@@ -412,6 +416,7 @@ function showTodayData(){
 
   function fillDropdown(month,year){
       var monthname_in_dropdown= month!=="" ? month : currentMonth;
+<<<<<<< HEAD
        var monthNames_key = {"01": "JAN","02": "FEB","03":"MAR", "04":"APR","05":"MAY", "06":"JUN","07":"JUL","08":"AUG","09":"SEP","10":"OCT","11":"NOV","12":"DEC"};  
 
        $('.month_name').html(monthNames_key[monthname_in_dropdown] + " <span class='caret'></span>");
@@ -419,6 +424,16 @@ function showTodayData(){
        var year_in_dropdown= year!=="" ? year : currentYear;        
       $('.year_name').html(year_in_dropdown+" <span class='caret'></span>");      
        
+=======
+
+       $.each(monthNames, function (k, v) {
+            if (v === monthname_in_dropdown)  $('.month_name').html(k + " <span class='caret'></span>"); 
+        });
+
+       var year_in_dropdown= year!=="" ? year : currentYear;        
+      $('.year_name').html(year_in_dropdown+" <span class='caret'></span>");      
+        
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
        //month
          var li_month="";
          $.each(monthNames, function (k, v) {

@@ -49,7 +49,11 @@ session_start();
       </nav>
 
 <div class="container scrollable">
+<<<<<<< HEAD
 <marquee class="text-danger " style="padding:1px;font-size:1.2em;font-weight:bold">QuANTA 1.5 is released. Go to "http://quotequads.co.in/quanta/download" to update in mobile. <b>YOU WILL GET NOTIFICATION REMINDER ONCE YOU UPDATED IT. </b> Follow instructions given in that site to update it. Ignore if updated!</marquee> 
+=======
+<!-- <marquee class="text-danger visible-xs visible-sm" style="padding:1px;font-size:1.2em;font-weight:bold">QuANTA 1.2 is released. Go to "http://quotequads.co.in/quanta/download" to install. Ignore if updated.</marquee> -->
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
 <div class="content-area">
 
 </div><!-- div-content area -end -->

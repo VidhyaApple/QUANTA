@@ -1,5 +1,9 @@
 <?php
+<<<<<<< HEAD
 $file = 'quanta-1_5.apk'; //not public folder
+=======
+$file = 'quanta.apk'; //not public folder
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
 if (file_exists($file)) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/vnd.android.package-archive');

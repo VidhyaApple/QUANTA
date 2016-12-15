@@ -83,16 +83,40 @@ img {
                  </thead>
                  <tbody>
                       <tr>
+<<<<<<< HEAD
 <td>VERSION 1.5 (LATEST september 2016)<br>(Notification Bugs fixed)</td>
                             <td><a href="download.php" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
 </tr>
 <tr>
 
                             <td>VERSION 1.4<br>(Bugs fixed)</td>
+=======
+                            <td>VERSION 1.3 (LATEST August 2016)<br>(Bugs fixed)</td>
+                            <td><a href="download.php" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
+                            
+                            
+                      </tr>
+                      <tr>
+                            <td>VERSION 1.2 (August 2016)<br>(Bugs fixed and Reminder feature added)</td>
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
                             <td><a href="#" onclick="alert('Please download latest version!');" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
                             
                             
                       </tr>
+<<<<<<< HEAD
+=======
+                     <tr>
+                            <td>VERSION 1.1 (July 2016)</td>
+                            <td><a href="#" onclick="alert('Please download latest version!');" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
+                            
+                            
+                      </tr>
+                      <tr>
+                            <td>VERSION 1.0 (June 2016)</td>
+                            <td><a href="#" onclick="alert('Please download latest version!');" type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> DOWNLOAD</a></td>
+                            
+                      </tr>
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
                       
                  </tbody>   
             </table>
@@ -106,7 +130,10 @@ img {
         <li>It will be installed successfully and don't forget to switch off "unknown sources".</li>
     </ol>
     <p>(NOTE: To update older version, Uninstall older version and install it.)</p>
+<<<<<<< HEAD
 <p>(<span style="color:red">NOTE only for MIUI users </span>: To get notification work: Go to settings->permissions->autostart->switch on QuANTA) </p>
+=======
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
 </div>
 
                 <h2 class="text-center text-danger demo">QuANTA DEMO</h2>
@@ -121,7 +148,11 @@ img {
     <li data-target="#carousel-demo" data-slide-to="4"></li>
   </ol>
   
+<<<<<<< HEAD
   <!-- Sliding images starting here --> 
+=======
+  <!-- Sliding images statring here --> 
+>>>>>>> 1f397fa5567a5202a063583f9e10324a794d0503
    <div class="carousel-inner"> 
     <div class="item active"> 
       <img src="images/demo/initial.png" alt="initial"> 
